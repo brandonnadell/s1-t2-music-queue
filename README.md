@@ -4,12 +4,12 @@
 
 A shared group music queue with embedded Youtube player
 
-* Yuval Steinhart ySteinhart1
-* Ryan Simone rysimone
-* Pranav Madapurmath pranavm35
-* Brandon Nadell brandonnadell
-* Isaac Lam isaaclaam
-* Zhiyu Ning zhiyuning
+* Yuval Steinhart (ySteinhart1)
+* Ryan Simone (rysimone)
+* Pranav Madapurmath (pranavm35)
+* Brandon Nadell (brandonnadell)
+* Isaac Lam (isaaclaam)
+* Zhiyu Ning (zhiyuning)
 
 
 **Features**
