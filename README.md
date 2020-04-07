@@ -11,6 +11,11 @@ A shared group music queue with embedded Youtube player
 * Isaac Lam (isaaclaam)
 * Zhiyu Ning (zhiyuning)
 
+**Tech Stack**
+Next.js
+
+A web app with a shared youtube music queue. The queue is shareable by a sendable URL and can be modified via an upvote/downvote system. The app has search functionality to find music using the YouTube API and allows you to skip, pause/play, and rewind.
+
 
 **Features**
 * Upvote system
