@@ -15,6 +15,8 @@ A shared group music queue with embedded Youtube player
 
 Next.js
 
+**Description**
+
 A web app with a shared youtube music queue. The queue is shareable by a sendable URL and can be modified via an upvote/downvote system. The app has search functionality to find music using the YouTube API and allows you to skip, pause/play, and rewind.
 
 
@@ -28,3 +30,20 @@ A web app with a shared youtube music queue. The queue is shareable by a sendabl
   * Randomly generate shareable URL
   * Everyone on same page while songs are playing
 * Mobile friendly
+* People can pick name when joining
+* Room creator can kick members
+* Limit users to certain number of songs/upvotes in a timeframe
+* Name room
+
+**User Roles**
+
+* Room creator
+ * Creates a room
+ * Has all the same privileges as room user
+ * Kick people
+* Room user
+ * Queue songs
+ * Upvote and downvote
+ * Choose name for the room
+
+No authentication needed
