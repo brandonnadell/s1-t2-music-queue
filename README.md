@@ -34,6 +34,7 @@ A web app with a shared youtube music queue. The queue is shareable by a sendabl
 * Room creator can kick members
 * Limit users to certain number of songs/upvotes in a timeframe
 * Name room
+* Room chat
 
 **User Roles**
 
