@@ -38,12 +38,12 @@ A web app with a shared youtube music queue. The queue is shareable by a sendabl
 **User Roles**
 
 * Room creator
- * Creates a room
- * Has all the same privileges as room user
- * Kick people
+  * Creates a room
+  * Has all the same privileges as room user
+  * Kick people
 * Room user
- * Queue songs
- * Upvote and downvote
- * Choose name for the room
+  * Queue songs
+  * Upvote and downvote
+  * Choose name for the room
 
 No authentication needed
