@@ -9,7 +9,7 @@
     "setup": "node ./setup_now.js",
     "cy:run": "cypress run",
     "fix:format": "prettier --write \"**/*.{js,json,md}\" --ignore-path .gitignore",
-    "test": "npm-run-all test:*",
+    "test": "npm run fix:format && npm-run-all test:*",
     "test:format": "prettier --check \"**/*.{js,json}\" --ignore-path .gitignore",
     "test:cypress": "start-server-and-test dev 3000 cy:run",
     "danger": "danger"
