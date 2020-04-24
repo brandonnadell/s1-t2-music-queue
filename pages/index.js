@@ -1,5 +1,6 @@
 import Layout from "../components/Layout";
 import { optionalAuth } from "../utils/ssr";
+import SearchBar from "../components/SearchBar";
 
 export const getServerSideProps = optionalAuth;
 
@@ -10,6 +11,9 @@ function HomePage(props) {
     <Layout user={user}>
       {user ? (
         <div>
+          <div>
+            <SearchBar />
+          </div>
           You're logged in! Here's what the server knows about you:
           <pre>{JSON.stringify(user, null, "\t")}</pre>
         </div>

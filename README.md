@@ -19,6 +19,12 @@ Next.js
 
 A web app with a shared youtube music queue. The queue is shareable by a sendable URL and can be modified via an upvote/downvote system. The app has search functionality to find music using the YouTube API and allows you to skip, pause/play, and rewind.
 
+**Developer Notes**
+
+Make sure to add your developer API key into SearchBar.js. Instructions on how to go about generating your key can be found here:
+https://developers.google.com/youtube/registering_an_application
+*We will switch to OAuth 2.0 in a later sprint once we establish the backend to deal with the user base.*
+
 
 **Features**
 * Upvote system
