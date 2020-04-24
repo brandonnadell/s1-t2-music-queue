@@ -23,12 +23,7 @@ function AppNavbar(props) {
                 title={
                   <>
                     Hi, {user.name}
-                    <Image
-                      className="ml-2"
-                      src={user.picture}
-                      width={24}
-                      height={24}
-                    />
+                    <Image className="ml-2" src={user.picture} width={24} height={24} />
                   </>
                 }
               >

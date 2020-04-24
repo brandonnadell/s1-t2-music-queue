@@ -23,10 +23,7 @@ inquirer
       validate: (value) => {
         const valid = /^https:\/\//.test(value);
 
-        return (
-          valid ||
-          "Invalid url. This should be the production url copied from running 'npx now'"
-        );
+        return valid || "Invalid url. This should be the production url copied from running 'npx now'";
       },
     },
   ])
