@@ -22,8 +22,8 @@ A web app with a shared youtube music queue. The queue is shareable by a sendabl
 **Developer Notes**
 
 Make sure to add your developer API key into SearchBar.js. Instructions on how to go about generating your key can be found here:
-https://developers.google.com/youtube/registering_an_application
-_We will switch to OAuth 2.0 in a later sprint once we establish the backend to deal with the user base._
+https://developers.google.com/youtube/registering_an_application.
+_We will switch to OAuth 2.0 eventually in order to get rid of the need for individual keys and for the purposes of having proper functionality on the production._
 
 **Features**
 
