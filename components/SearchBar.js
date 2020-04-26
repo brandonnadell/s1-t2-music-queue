@@ -1,72 +1,150 @@
 import React, { useState, useEffect } from "react";
+import API_KEY from "../helpers/api";
+import InputGroup from "react-bootstrap/InputGroup";
+import Button from "react-bootstrap/Button";
+import Image from "react-bootstrap/Image";
+import FormControl from "react-bootstrap/FormControl";
+import Card from "react-bootstrap/Card";
+import Spinner from "react-bootstrap/Spinner";
+import Table from "react-bootstrap/Table";
+import Alert from "react-bootstrap/Alert";
 
-const API_KEY = "{INSERT KEY HERE}";
 var songs = [];
-var qterm = "";
+var maxResults;
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [count, setCount] = useState(0);
-  const [data, setData] = useState({});
+  const [searchCount, setSearchCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [moreResultsCount, setMoreResultsCount] = useState(0);
+  const [error, setError] = useState("");
+  const [data, setData] = useState("");
 
   useEffect(() => {
     async function fetchData() {
-      qterm = searchTerm;
-      qterm = qterm.replace(" ", "+");
+      setLoading(true);
+      maxResults = 3;
       const url =
-        "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=3&order=relevance&q=" +
-        qterm +
+        "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" +
+        searchTerm +
         "&type=video&videoCategoryId=10&key=" +
         API_KEY;
-      console.log("url: " + url);
       const res = await fetch(url);
       res
         .json()
-        .then((res) => setData(res))
-        .catch((err) => setErrors(err));
+        .then((res) => {
+          setData(res);
+        })
+        .then((res) => {
+          setLoading(false);
+        });
+      // .catch((err) => setError(err));
+      // .catch((err) => console.error(err));
     }
     if (searchTerm.length !== 0) {
       fetchData();
     }
-  }, [count]);
+  }, [searchCount]);
 
-  if (qterm.length !== 0) {
-    songs = [];
-    for (let key in data) {
-      if (key === "items") {
-        for (let item in data[key]) {
-          songs.push({
-            title: data[key][item]["snippet"]["title"]
-              .replace(/&quot;/g, '"')
-              .replace(/&amp;/g, "&")
-              .replace(/&#39;/g, "'"),
-            img: data[key][item]["snippet"]["thumbnails"]["high"]["url"],
-          });
-        }
-      }
-    }
-    qterm = "";
+  function displayAllResults(param) {
+    setMoreResultsCount(moreResultsCount + 1);
+    maxResults = param;
+  }
+
+  if (searchTerm.length !== 0) {
+    songs = (data.items || []).map((song) => {
+      return {
+        title: song.snippet.title
+          .replace(/&quot;/g, '"')
+          .replace(/&amp;/g, "&")
+          .replace(/&#39;/g, "'"),
+        artist: song.snippet.channelTitle,
+        img: song.snippet.thumbnails.high.url,
+      };
+    });
   }
 
   return (
     <div>
-      <input type="text" placeholder="Search for music..." onChange={(e) => setSearchTerm(e.target.value)} />
-      <button onClick={() => setCount(count + 1)}>Search</button>
+      <InputGroup className="mb-3">
+        <FormControl
+          placeholder="Search for music..."
+          aria-label="Search for music..."
+          aria-describedby="basic-addon2"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <InputGroup.Append>
+          <Button
+            variant="outline-dark"
+            onClick={() => setSearchCount(searchCount + 1)}
+          >
+            Search
+          </Button>
+        </InputGroup.Append>
+      </InputGroup>
+      {data.error && (
+        <Alert variant="danger">
+          <Alert.Heading>
+            Oh snap! There was an error with the API response!
+          </Alert.Heading>
+          <p>{data.error.errors[0].message}</p>
+        </Alert>
+      )}
       {songs.length > 0 && (
-        <div>
-          <h2>Results</h2>
-          <hr />
-          <ul>
-            {songs &&
-              songs.map((song, ind) => (
-                <div key={song.title}>
-                  <p>
-                    <img src={song.img} className="img-responsive" height="40" width="40" /> {song.title}
-                  </p>
-                </div>
-              ))}
-          </ul>
-        </div>
+        <Card>
+          <Card.Header as="h5">Results</Card.Header>
+          {loading === true ? (
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          ) : (
+            <div>
+              <Table hover variant="light">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Artist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {songs &&
+                    songs.slice(0, maxResults).map((song, ind) => (
+                      <tr key={song.title}>
+                        <td>
+                          <Image
+                            className="img-responsive"
+                            src={song.img}
+                            height="40"
+                            width="40"
+                            rounded
+                          />{" "}
+                          {song.title}
+                        </td>
+                        <td>{song.artist}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+              <Card.Footer>
+                {maxResults === 3 ? (
+                  <Button
+                    onClick={() => displayAllResults(10)}
+                    variant="outline-dark"
+                  >
+                    Show More Results
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => displayAllResults(3)}
+                    variant="outline-dark"
+                  >
+                    Show Less Results
+                  </Button>
+                )}
+              </Card.Footer>
+            </div>
+          )}
+        </Card>
       )}
     </div>
   );
