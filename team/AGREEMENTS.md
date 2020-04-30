@@ -1,5 +1,9 @@
 Ryan Simone, Pranav Madapurmath, Brandon Nadell, Isaac Lam, Zhiyu Ning, Yuval Steinhart
 
+# Closed Source 
+
+# Agreements
+
 - Be accountable and dependable
 - Try to come to class
 - Be aware of the state of the project
