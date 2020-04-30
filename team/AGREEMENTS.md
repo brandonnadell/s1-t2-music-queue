@@ -1,6 +1,8 @@
 Ryan Simone, Pranav Madapurmath, Brandon Nadell, Isaac Lam, Zhiyu Ning, Yuval Steinhart
 
-# Closed Source 
+# 4/30/2020
+
+Team decided to keep repo closed source, with access only by course staff, not by other teams.
 
 # Agreements
 
