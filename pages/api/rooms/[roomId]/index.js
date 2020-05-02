@@ -35,18 +35,4 @@ async function performAction(req, user) {
   throw { status: 405 };
 }
 
-async function createRoom(req, user) {
-  let newRoom;
-
-  const client = await initDatabase();
-  const rooms = client.collection("rooms");
-
-  newRoom.creator = user._id;
-  newRoom.user = [user._id];
-
-  await rooms.insertOne(newRoom);
-
-  return newRoom;
-}
-
 export default authenticatedAction(performAction);
