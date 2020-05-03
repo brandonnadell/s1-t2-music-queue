@@ -17,7 +17,7 @@ function AppNavbar(props) {
         <Link href="/" passHref={true}>
           <Navbar.Brand>Shared Music Queue</Navbar.Brand>
         </Link>
-        <CreateRoom />
+        <CreateRoom user={user}></CreateRoom>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Nav>

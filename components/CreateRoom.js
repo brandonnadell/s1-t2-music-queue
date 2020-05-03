@@ -1,28 +1,19 @@
 import Button from "react-bootstrap/Button";
 import Router from "next/router";
 
-const CreateRoom = () => {
-  function redirect() {
-    const room = getServerSideProps().props;
-    if (room) {
-      console.log(room?.id);
-      /* Router.push("/room/${room.id}") */
-    } else {
-      throw {
-        status: 404,
-        message: "Room not found",
-      };
-    }
+export default function CreateRoom(props) {
+  async function redirect() {
+    const roomId = 1;
+    const res = await fetch("/api/rooms", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ creator: props.user.given_name }),
+    });
+    console.log(res.body);
+    /* Router.push("/room/" + res.id)*/
   }
 
-  async function getServerSideProps() {
-    // Fetch data from external API
-    const res = await fetch("/api/createRoom");
-
-    // Pass data to the page via props
-    return { props: { res } };
-  }
   return <Button onClick={() => redirect()}>Create Room</Button>;
-};
-
-export default CreateRoom;
+}

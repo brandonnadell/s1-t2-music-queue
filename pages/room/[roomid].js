@@ -2,9 +2,9 @@ import { useRouter } from "next/router";
 
 const Room = () => {
   const router = useRouter();
-  const { pid } = router.query;
+  const { roomid } = router.query;
 
-  return <p>Room: {pid}</p>;
+  return <p>Room: {roomid}</p>;
 };
 
 export default Room;
