@@ -25,21 +25,9 @@ async function createRoom(req) {
     creator,
   };
 
-  const mutation = {
-    $setOnInsert: {
-      creator,
-    },
-    $set: {
-      role: "admin",
-    },
-  };
+  const result = await rooms.insertOne(query);
 
-  const result = await rooms.findOneAndUpdate(query, mutation, {
-    upsert: true,
-    returnOriginal: false,
-  });
-
-  return result.value;
+  return result.insertedId;
 }
 
 async function performAction(req, user) {

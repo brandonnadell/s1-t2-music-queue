@@ -11,8 +11,9 @@ export default function CreateRoom(props) {
       },
       body: JSON.stringify({ creator: props.user.given_name }),
     });
-    console.log(res.body);
-    /* Router.push("/room/" + res.id)*/
+    res.json().then((res) => {
+      Router.push("/room/" + res.substring(15));
+    });
   }
 
   return <Button onClick={() => redirect()}>Create Room</Button>;
