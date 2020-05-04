@@ -12,7 +12,7 @@ import Alert from "react-bootstrap/Alert";
 var songs = [];
 var maxResults;
 
-const SearchBar = () => {
+const SearchBar = ({ onUrlClick }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCount, setSearchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -20,27 +20,28 @@ const SearchBar = () => {
   const [error, setError] = useState("");
   const [data, setData] = useState("");
 
+  async function fetchData() {
+    setLoading(true);
+    maxResults = 3;
+    const url =
+      "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" +
+      searchTerm +
+      "&type=video&videoCategoryId=10&key=" +
+      API_KEY;
+    const res = await fetch(url);
+    res
+      .json()
+      .then((res) => {
+        setData(res);
+      })
+      .then((res) => {
+        setLoading(false);
+      });
+    // .catch((err) => setError(err));
+    // .catch((err) => console.error(err));
+  }
+
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      maxResults = 3;
-      const url =
-        "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" +
-        searchTerm +
-        "&type=video&videoCategoryId=10&key=" +
-        API_KEY;
-      const res = await fetch(url);
-      res
-        .json()
-        .then((res) => {
-          setData(res);
-        })
-        .then((res) => {
-          setLoading(false);
-        });
-      // .catch((err) => setError(err));
-      // .catch((err) => console.error(err));
-    }
     if (searchTerm.length !== 0) {
       fetchData();
     }
@@ -49,6 +50,12 @@ const SearchBar = () => {
   function displayAllResults(param) {
     setMoreResultsCount(moreResultsCount + 1);
     maxResults = param;
+  }
+
+  function sendUrl(event) {
+    // urlChange("https://www.youtube.com/watch?v=" + id)
+    // console.log(event.target.name)
+    onUrlClick("https://www.youtube.com/watch?v=" + event.target.name)
   }
 
   if (searchTerm.length !== 0) {
@@ -60,6 +67,7 @@ const SearchBar = () => {
           .replace(/&#39;/g, "'"),
         artist: song.snippet.channelTitle,
         img: song.snippet.thumbnails.high.url,
+        videoId: song.id.videoId,
       };
     });
   }
@@ -98,52 +106,55 @@ const SearchBar = () => {
               <span className="sr-only">Loading...</span>
             </Spinner>
           ) : (
-            <div>
-              <Table hover variant="light">
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Artist</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {songs &&
-                    songs.slice(0, maxResults).map((song, ind) => (
-                      <tr key={song.title}>
-                        <td>
-                          <Image
-                            className="img-responsive"
-                            src={song.img}
-                            height="40"
-                            width="40"
-                            rounded
-                          />{" "}
-                          {song.title}
-                        </td>
-                        <td>{song.artist}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-              <Card.Footer>
-                {maxResults === 3 ? (
-                  <Button
-                    onClick={() => displayAllResults(10)}
-                    variant="outline-dark"
-                  >
-                    Show More Results
+              <div>
+                <Table hover variant="light">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Artist</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {songs &&
+                      songs.slice(0, maxResults).map((song, ind) => (
+                        <tr key={song.title}>
+                          <td>
+                            <Image
+                              className="img-responsive"
+                              src={song.img}
+                              height="40"
+                              width="40"
+                              rounded
+                            />{" "}
+                            {song.title}
+                          </td>
+                          <td>{song.artist}</td>
+                          <td>
+                            <Button name={song.videoId} onClick={sendUrl}>Play Me (Add to queue...)!</Button>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+                <Card.Footer>
+                  {maxResults === 3 ? (
+                    <Button
+                      onClick={() => displayAllResults(10)}
+                      variant="outline-dark"
+                    >
+                      Show More Results
                   </Button>
-                ) : (
-                  <Button
-                    onClick={() => displayAllResults(3)}
-                    variant="outline-dark"
-                  >
-                    Show Less Results
+                  ) : (
+                      <Button
+                        onClick={() => displayAllResults(3)}
+                        variant="outline-dark"
+                      >
+                        Show Less Results
                   </Button>
-                )}
-              </Card.Footer>
-            </div>
-          )}
+                    )}
+                </Card.Footer>
+              </div>
+            )}
         </Card>
       )}
     </div>
