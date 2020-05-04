@@ -23,7 +23,7 @@ function HomePage(props) {
             <SearchBar onUrlClick={handleUrlClick} />
           </div>
           <div>
-            <VideoPlayer />
+            <VideoPlayer url={url} />
           </div>
           You're logged in! Here's what the server knows about you:
           <pre>{JSON.stringify(user, null, "\t")}</pre>
