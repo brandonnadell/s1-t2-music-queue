@@ -6,6 +6,7 @@ import Card from "react-bootstrap/Card";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import Table from "react-bootstrap/Table";
 import Spinner from "react-bootstrap/Spinner";
+import React, { useState, useEffect } from "react";
 
 export function VideoPlayer(props) {
   let queue = props.queue;
@@ -136,7 +137,7 @@ export function VideoPlayer(props) {
         <div></div>
       )}
       <ReactPlayer
-        url={this.url}
+        url={url}
         controls={true}
         pip={false}
         playing={true}
@@ -154,7 +155,7 @@ export function VideoPlayer(props) {
           },
         }}
       />
-    );
-  }
+    </div>
+  );
 }
 export default VideoPlayer;
