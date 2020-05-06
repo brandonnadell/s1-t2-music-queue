@@ -5,7 +5,6 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
-import CreateRoom from "../components/CreateRoom";
 import { loadGetInitialProps } from "next/dist/next-server/lib/utils";
 
 function AppNavbar(props) {
@@ -17,7 +16,6 @@ function AppNavbar(props) {
         <Link href="/" passHref={true}>
           <Navbar.Brand>Shared Music Queue</Navbar.Brand>
         </Link>
-        <CreateRoom user={user}></CreateRoom>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Nav>

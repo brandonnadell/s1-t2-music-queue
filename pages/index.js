@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { optionalAuth } from "../utils/ssr";
 import SearchBar from "../components/SearchBar";
-import VideoPlayer from "../components/VideoPlayer";
+import CreateRoom from "../components/CreateRoom";
 
 export const getServerSideProps = optionalAuth;
 
@@ -33,8 +33,7 @@ function HomePage(props) {
               muted={false}
             />
           </div>
-          You're logged in! Here's what the server knows about you:
-          <pre>{JSON.stringify(user, null, "\t")}</pre>
+          <CreateRoom user={user}></CreateRoom>
         </div>
       ) : (
           <div>You're not logged in!</div>
