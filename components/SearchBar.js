@@ -12,7 +12,7 @@ import Alert from "react-bootstrap/Alert";
 var songs = [];
 var maxResults;
 
-const SearchBar = () => {
+const SearchBar = ({ onUrlClick }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCount, setSearchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -20,27 +20,28 @@ const SearchBar = () => {
   const [error, setError] = useState("");
   const [data, setData] = useState("");
 
+  async function fetchData() {
+    setLoading(true);
+    maxResults = 3;
+    const url =
+      "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" +
+      searchTerm +
+      "&type=video&videoCategoryId=10&key=" +
+      API_KEY;
+    const res = await fetch(url);
+    res
+      .json()
+      .then((res) => {
+        setData(res);
+      })
+      .then((res) => {
+        setLoading(false);
+      });
+    // .catch((err) => setError(err));
+    // .catch((err) => console.error(err));
+  }
+
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      maxResults = 3;
-      const url =
-        "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" +
-        searchTerm +
-        "&type=video&videoCategoryId=10&key=" +
-        API_KEY;
-      const res = await fetch(url);
-      res
-        .json()
-        .then((res) => {
-          setData(res);
-        })
-        .then((res) => {
-          setLoading(false);
-        });
-      // .catch((err) => setError(err));
-      // .catch((err) => console.error(err));
-    }
     if (searchTerm.length !== 0) {
       fetchData();
     }
@@ -49,6 +50,10 @@ const SearchBar = () => {
   function displayAllResults(param) {
     setMoreResultsCount(moreResultsCount + 1);
     maxResults = param;
+  }
+
+  function sendUrl(url, title, img) {
+    onUrlClick("https://www.youtube.com/watch?v=" + url, title, img);
   }
 
   if (searchTerm.length !== 0) {
@@ -60,6 +65,7 @@ const SearchBar = () => {
           .replace(/&#39;/g, "'"),
         artist: song.snippet.channelTitle,
         img: song.snippet.thumbnails.high.url,
+        videoId: song.id.videoId,
       };
     });
   }
@@ -102,6 +108,7 @@ const SearchBar = () => {
               <Table hover variant="light">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Title</th>
                     <th>Artist</th>
                   </tr>
@@ -110,6 +117,16 @@ const SearchBar = () => {
                   {songs &&
                     songs.slice(0, maxResults).map((song, ind) => (
                       <tr key={song.title}>
+                        <td>
+                          <Button
+                            variant="outline-success"
+                            onClick={() =>
+                              sendUrl(song.videoId, song.title, song.img)
+                            }
+                          >
+                            Queue
+                          </Button>
+                        </td>
                         <td>
                           <Image
                             className="img-responsive"
