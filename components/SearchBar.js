@@ -52,10 +52,8 @@ const SearchBar = ({ onUrlClick }) => {
     maxResults = param;
   }
 
-  function sendUrl(event) {
-    // urlChange("https://www.youtube.com/watch?v=" + id)
-    // console.log(event.target.name)
-    onUrlClick("https://www.youtube.com/watch?v=" + event.target.name)
+  function sendUrl(url, title, img) {
+    onUrlClick("https://www.youtube.com/watch?v=" + url, title, img);
   }
 
   if (searchTerm.length !== 0) {
@@ -106,55 +104,63 @@ const SearchBar = ({ onUrlClick }) => {
               <span className="sr-only">Loading...</span>
             </Spinner>
           ) : (
-              <div>
-                <Table hover variant="light">
-                  <thead>
-                    <tr>
-                      <th>Title</th>
-                      <th>Artist</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {songs &&
-                      songs.slice(0, maxResults).map((song, ind) => (
-                        <tr key={song.title}>
-                          <td>
-                            <Image
-                              className="img-responsive"
-                              src={song.img}
-                              height="40"
-                              width="40"
-                              rounded
-                            />{" "}
-                            {song.title}
-                          </td>
-                          <td>{song.artist}</td>
-                          <td>
-                            <Button name={song.videoId} onClick={sendUrl}>Play Me (Add to queue...)!</Button>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </Table>
-                <Card.Footer>
-                  {maxResults === 3 ? (
-                    <Button
-                      onClick={() => displayAllResults(10)}
-                      variant="outline-dark"
-                    >
-                      Show More Results
+            <div>
+              <Table hover variant="light">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {songs &&
+                    songs.slice(0, maxResults).map((song, ind) => (
+                      <tr key={song.title}>
+                        <td>
+                          <Button
+                            variant="outline-success"
+                            onClick={() =>
+                              sendUrl(song.videoId, song.title, song.img)
+                            }
+                          >
+                            Queue
+                          </Button>
+                        </td>
+                        <td>
+                          <Image
+                            className="img-responsive"
+                            src={song.img}
+                            height="40"
+                            width="40"
+                            rounded
+                          />{" "}
+                          {song.title}
+                        </td>
+                        <td>{song.artist}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+              <Card.Footer>
+                {maxResults === 3 ? (
+                  <Button
+                    onClick={() => displayAllResults(10)}
+                    variant="outline-dark"
+                  >
+                    Show More Results
                   </Button>
-                  ) : (
-                      <Button
-                        onClick={() => displayAllResults(3)}
-                        variant="outline-dark"
-                      >
-                        Show Less Results
+                ) : (
+                  <Button
+                    onClick={() => displayAllResults(3)}
+                    variant="outline-dark"
+                  >
+                    Show Less Results
                   </Button>
-                    )}
-                </Card.Footer>
-              </div>
-            )}
+                )}
+              </Card.Footer>
+            </div>
+          )}
         </Card>
       )}
     </div>
