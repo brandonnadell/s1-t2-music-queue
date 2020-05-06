@@ -8,11 +8,14 @@ export const getServerSideProps = optionalAuth;
 
 function HomePage(props) {
   const user = props.user;
-  const [url, setUrl] = useState("");
+  const [queue, setQueue] = useState([]);
+  const [titles, setTitles] = useState([]);
+  const [imgs, setImgs] = useState([]);
 
-  function handleUrlClick(vidUrl) {
-    console.log(vidUrl)
-    setUrl(vidUrl)
+  function handleUrlClick(vidUrl, vidTitle, vidImg) {
+    setQueue(queue.concat(vidUrl));
+    setTitles(titles.concat(vidTitle));
+    setImgs(imgs.concat(vidImg));
   }
 
   return (
@@ -23,7 +26,12 @@ function HomePage(props) {
             <SearchBar onUrlClick={handleUrlClick} />
           </div>
           <div>
-            <VideoPlayer url={url} />
+            <VideoPlayer
+              queue={queue}
+              titles={titles}
+              imgs={imgs}
+              muted={false}
+            />
           </div>
           You're logged in! Here's what the server knows about you:
           <pre>{JSON.stringify(user, null, "\t")}</pre>
