@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { optionalAuth } from "../utils/ssr";
-import SearchBar from "../components/SearchBar";
 import CreateRoom from "../components/CreateRoom";
 
 export const getServerSideProps = optionalAuth;
