@@ -8,11 +8,13 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
+import firebase from "../helpers/firebase"
 
 var songs = [];
 var maxResults;
+var songId = 0
 
-const SearchBar = ({ onUrlClick }) => {
+const SearchBar = ({ roomId }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCount, setSearchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -44,6 +46,7 @@ const SearchBar = ({ onUrlClick }) => {
   useEffect(() => {
     if (searchTerm.length !== 0) {
       fetchData();
+      console.log("room id is ", roomId);
     }
   }, [searchCount]);
 
@@ -53,7 +56,18 @@ const SearchBar = ({ onUrlClick }) => {
   }
 
   function sendUrl(url, title, img) {
-    onUrlClick("https://www.youtube.com/watch?v=" + url, title, img);
+    let videoUrl = "https://www.youtube.com/watch?v=" + url
+    return firebase.database().ref("rooms/" + roomId + "/songs/").push().set({
+      title: title,
+      image: img,
+      videoUrl: videoUrl,
+      downvote: 0,
+      upvote: 0,
+      rating: 0,
+      progress: 0
+    }).then(() => {
+      console.log("Succesfully wrote to db.")
+    })
   }
 
   if (searchTerm.length !== 0) {
@@ -104,63 +118,63 @@ const SearchBar = ({ onUrlClick }) => {
               <span className="sr-only">Loading...</span>
             </Spinner>
           ) : (
-            <div>
-              <Table hover variant="light">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Title</th>
-                    <th>Artist</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {songs &&
-                    songs.slice(0, maxResults).map((song, ind) => (
-                      <tr key={song.title}>
-                        <td>
-                          <Button
-                            variant="outline-success"
-                            onClick={() =>
-                              sendUrl(song.videoId, song.title, song.img)
-                            }
-                          >
-                            Queue
+              <div>
+                <Table hover variant="light">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Title</th>
+                      <th>Artist</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {songs &&
+                      songs.slice(0, maxResults).map((song, ind) => (
+                        <tr key={song.title}>
+                          <td>
+                            <Button
+                              variant="outline-success"
+                              onClick={() =>
+                                sendUrl(song.videoId, song.title, song.img)
+                              }
+                            >
+                              Queue
                           </Button>
-                        </td>
-                        <td>
-                          <Image
-                            className="img-responsive"
-                            src={song.img}
-                            height="40"
-                            width="40"
-                            rounded
-                          />{" "}
-                          {song.title}
-                        </td>
-                        <td>{song.artist}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-              <Card.Footer>
-                {maxResults === 3 ? (
-                  <Button
-                    onClick={() => displayAllResults(10)}
-                    variant="outline-dark"
-                  >
-                    Show More Results
+                          </td>
+                          <td>
+                            <Image
+                              className="img-responsive"
+                              src={song.img}
+                              height="40"
+                              width="40"
+                              rounded
+                            />{" "}
+                            {song.title}
+                          </td>
+                          <td>{song.artist}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+                <Card.Footer>
+                  {maxResults === 3 ? (
+                    <Button
+                      onClick={() => displayAllResults(10)}
+                      variant="outline-dark"
+                    >
+                      Show More Results
                   </Button>
-                ) : (
-                  <Button
-                    onClick={() => displayAllResults(3)}
-                    variant="outline-dark"
-                  >
-                    Show Less Results
+                  ) : (
+                      <Button
+                        onClick={() => displayAllResults(3)}
+                        variant="outline-dark"
+                      >
+                        Show Less Results
                   </Button>
-                )}
-              </Card.Footer>
-            </div>
-          )}
+                    )}
+                </Card.Footer>
+              </div>
+            )}
         </Card>
       )}
     </div>

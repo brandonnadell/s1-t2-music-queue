@@ -1,5 +1,6 @@
 import ReactPlayer from "react-player";
 import Button from "react-bootstrap/Button";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Alert from "react-bootstrap/Alert";
 import Image from "react-bootstrap/Image";
 import Card from "react-bootstrap/Card";
@@ -7,12 +8,27 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import Table from "react-bootstrap/Table";
 import Spinner from "react-bootstrap/Spinner";
 import React, { useState, useEffect } from "react";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import firebase from "../helpers/firebase"
 
 export function VideoPlayer(props) {
   let queue = props.queue;
-  let url = queue[0];
-  let title = props.titles[0];
-  let img = props.imgs[0];
+  let list = props.list[0];
+  let url = "";
+  let title = "";
+  let img = "";
+  let roomId = props.roomId;
+  let data = {}
+  let key = ""
+  if (list && list.length !== 0) {
+    data = list.val;
+    key = list.key;
+    url = data.videoUrl;
+    title = data.title;
+    img = data.image;
+  }
   let muted = props.muted;
   const [player, setPlayer] = useState("");
   const [playing, setPlaying] = useState("");
@@ -41,11 +57,12 @@ export function VideoPlayer(props) {
   function handleStart() {
     setPlaying(true);
     setStarted(true);
+    console.log('---start');
   }
 
   function handleReady() {
+    console.log('---ready');
     setStarted(false);
-    setProgress(0);
   }
 
   function handleProgress() {
@@ -57,9 +74,9 @@ export function VideoPlayer(props) {
   }
 
   function handleEnded() {
-    queue.shift();
-    props.titles.shift();
-    props.imgs.shift();
+    props.list.shift();
+    firebase.database().ref("rooms/" + roomId + "/songs/").child(key).remove();
+    console.log('---ended');
     setStarted(false);
   }
 
@@ -69,7 +86,7 @@ export function VideoPlayer(props) {
 
   return (
     <div>
-      {url && url != "" ? (
+      {props.list && props.list.length !== 0 ? (
         <div style={divStyle}>
           <div>
             <Card style={{ width: "18rem" }}>
@@ -99,14 +116,15 @@ export function VideoPlayer(props) {
                   </div>
                 </Card.Body>
               ) : (
-                <Spinner animation="border" role="status">
-                  <span className="sr-only">Loading...</span>
-                </Spinner>
-              )}
+                  <Spinner animation="border" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </Spinner>
+                )}
             </Card>
           </div>
           <div>
-            {queue.length > 1 ? (
+            {/* {console.log("length of list:", data_list.length)} */}
+            {props.list.length > 1 ? (
               <Card>
                 <Card.Header as="h5">Queue</Card.Header>
                 <Table striped>
@@ -114,30 +132,56 @@ export function VideoPlayer(props) {
                     <tr>
                       <th></th>
                       <th>Song</th>
+                      <th>Rating</th>
+                      <th><center>Vote</center></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {props.titles
-                      .slice(1, props.titles.length)
-                      .map((title, ind) => (
-                        <tr>
+                    {props.list
+                      .slice(1, props.list.length)
+                      .map((song, ind) => (
+                        <tr key={song.val.title}>
                           <td>{ind + 1}</td>
-                          <td>{title}</td>
+                          <td>{song.val.title}</td>
+                          <td>{song.val.rating}</td>
+                          <td>
+                            {/* <ButtonToolbar> */}
+                            <Button
+                              variant="outline-success"
+                              size="sm"
+                              block
+
+                            >
+                              Upvote
+                              </Button>
+                            <div>
+                              <center></center>
+                            </div>
+                            <Button
+                              variant="outline-danger"
+                              size="sm"
+                              block
+                            >
+                              Downvote
+                              </Button>
+                            {/* </ButtonToolbar> */}
+                          </td>
                         </tr>
                       ))}
                   </tbody>
                 </Table>
               </Card>
             ) : (
-              <div></div>
-            )}
+                <div></div>
+              )}
           </div>
         </div>
       ) : (
-        <div></div>
-      )}
+          <div></div>
+        )}
       <ReactPlayer
         url={url}
+        key={key}
         controls={true}
         pip={false}
         playing={true}
@@ -151,7 +195,7 @@ export function VideoPlayer(props) {
         onEnded={handleEnded}
         config={{
           youtube: {
-            playerVars: { disablekb: 1, autoplay: 1 },
+            playerVars: { disablekb: 1, autoplay: 1, start: data.progress },
           },
         }}
       />

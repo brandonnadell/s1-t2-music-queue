@@ -1,19 +1,14 @@
 import Button from "react-bootstrap/Button";
 import Router from "next/router";
+import firebase from "../helpers/firebase"
 
 export default function CreateRoom(props) {
   async function redirect() {
-    const roomId = 1;
-    const res = await fetch("/api/rooms", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ creator: props.user.given_name }),
-    });
-    res.json().then((res) => {
-      Router.push("/room/" + res.substring(15));
-    });
+    let roomKey = firebase.database().ref("rooms/").push().key;
+    firebase.database().ref("rooms/" + roomKey + "/").set({
+      creator: props.user.nickname
+    })
+    Router.push("/room/" + roomKey)
   }
 
   return <Button onClick={() => redirect()}>Create Room</Button>;
