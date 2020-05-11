@@ -1,3 +1,13 @@
+# Retro 5/11/20
+- Led by: Brandon Nadell
+- Present: Ryan Simone, Pranav Madapurmath, Yuval Steinhart, Zhiyu Ning, Isaac Lam
+
+## Action Item
+
+- a goal: Continue working to make the queue semi-synchronous for all users so that they can use the app together
+- a change: Communicate and work better within the sub-teams we assign for specific user stories
+- a measurement: How user-friendly the app is for multiple users
+
 # Retro 4/20/20
 
 - Led by: Ryan Simone
