@@ -5,10 +5,11 @@ import firebase from "../helpers/firebase"
 export default function CreateRoom(props) {
   async function redirect() {
     let roomKey = firebase.database().ref("rooms/").push().key;
-    firebase.database().ref("rooms/" + roomKey + "/").set({
+    return firebase.database().ref("rooms/" + roomKey + "/").set({
       creator: props.user.nickname
+    }).then(() => {
+      Router.push("/room/" + roomKey)
     })
-    Router.push("/room/" + roomKey)
   }
 
   return <Button onClick={() => redirect()}>Create Room</Button>;
