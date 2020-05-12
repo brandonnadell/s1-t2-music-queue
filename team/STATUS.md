@@ -1,3 +1,30 @@
+# Sprint Planning, 05/12/2020
+
+* Leader: Isaac Lam
+* Present: all
+* Absent: none
+
+## Sprint Goal for 05/12-05/21
+  
+Which of the 10 powerful questions did you ask?
+
+If we don't work towards this sprint goal, what will become inevitably lost later?
+  
+Describe your sprint goal here.
+
+Get in multiple user functionality and reordering stories to work together. Try to mainly focus on completing functionality, to get a basis before improving UI.
+  
+Describe briefly how you came up with that goal.
+
+We looked at our previous sprint goal to decide if it was too ambitious. Then, after we discussed the question above, we decided that functionality was our most immediate priority.
+  
+## Discussion of previous Sprint Goal
+  
+Briefly: was the sprint goal acheived?  Was it too ambitious?  Too modest? 
+
+Achieved our MVP, MVP just changed along the way. It seems to have been just right.
+  
+
 # Status, Monday 04/27/2020
 
 ## Sprint Goal for Monday 04/27 through Monday 05/04
