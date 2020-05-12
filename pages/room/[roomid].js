@@ -6,36 +6,47 @@ import VideoPlayer from "../../components/VideoPlayer";
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { requiredAuth } from "../../utils/ssr";
+import firebase from "../../helpers/firebase";
 
 export const getServerSideProps = requiredAuth;
 
 const Room = (props) => {
   const router = useRouter();
   const { roomid } = router.query;
-  const [queue, setQueue] = useState([]);
-  const [titles, setTitles] = useState([]);
-  const [imgs, setImgs] = useState([]);
+  const [list, setList] = useState([])
   const user = props.user;
+  let firebaseRef;
 
-  function handleUrlClick(vidUrl, vidTitle, vidImg) {
-    setQueue(queue.concat(vidUrl));
-    setTitles(titles.concat(vidTitle));
-    setImgs(imgs.concat(vidImg));
-  }
+  useEffect(() => {
+    firebaseRef = firebase.database().ref("rooms/" + roomid + "/songs");
+    firebaseRef.on("value", (snapshot) => {
+      // Grab the current value of what was written to the Realtime Database.
+      const tempList = [];
+      snapshot.forEach(child => {
+        tempList.push({ key: child.key, val: child.val() })
+      })
+      setList(tempList);
+    });
+    // return a cleanup function that will get called by React on unmount
+    return () => {
+      firebaseRef.off()
+    }
+  }, [])
 
   return (
     <Layout user={user}>
       <p>Room: {roomid}</p>
       <div>
         <div>
-          <SearchBar onUrlClick={handleUrlClick} />
+          <SearchBar roomId={roomid} />
         </div>
         <div>
+          {/* {console.log("sonng list object: ", list)} */}
           <VideoPlayer
-            queue={queue}
-            titles={titles}
-            imgs={imgs}
+            list={list}
             muted={false}
+            roomId={roomid}
+            user={user}
           />
         </div>
       </div>
