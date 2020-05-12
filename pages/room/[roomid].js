@@ -38,7 +38,7 @@ const Room = (props) => {
       <p>Room: {roomid}</p>
       <div>
         <div>
-          <SearchBar roomId={roomid} />
+          <SearchBar roomId={roomid} user={user} />
         </div>
         <div>
           {/* {console.log("sonng list object: ", list)} */}
