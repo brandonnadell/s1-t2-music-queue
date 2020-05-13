@@ -14,7 +14,7 @@ var songs = [];
 var maxResults;
 var songId = 0
 
-const SearchBar = ({ roomId }) => {
+const SearchBar = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCount, setSearchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,6 @@ const SearchBar = ({ roomId }) => {
   useEffect(() => {
     if (searchTerm.length !== 0) {
       fetchData();
-      console.log("room id is ", roomId);
     }
   }, [searchCount]);
 
@@ -57,16 +56,15 @@ const SearchBar = ({ roomId }) => {
 
   function sendUrl(url, title, img) {
     let videoUrl = "https://www.youtube.com/watch?v=" + url
-    return firebase.database().ref("rooms/" + roomId + "/songs/").push().set({
+    return firebase.database().ref("rooms/" + props.roomId + "/songs/").push().set({
       title: title,
       image: img,
       videoUrl: videoUrl,
       downvote: 0,
       upvote: 0,
       rating: 0,
-      progress: 0
-    }).then(() => {
-      console.log("Succesfully wrote to db.")
+      progress: 0,
+      addedBy: props.user.nickname
     })
   }
 

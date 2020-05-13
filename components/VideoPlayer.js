@@ -11,7 +11,8 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import firebase from "../helpers/firebase"
+import firebase from "../helpers/firebase";
+import BootstrapTable from 'react-bootstrap-table-next';
 
 export function VideoPlayer(props) {
   let queue = props.queue;
@@ -57,11 +58,9 @@ export function VideoPlayer(props) {
   function handleStart() {
     setPlaying(true);
     setStarted(true);
-    console.log('---start');
   }
 
   function handleReady() {
-    console.log('---ready');
     setStarted(false);
   }
 
@@ -76,7 +75,6 @@ export function VideoPlayer(props) {
   function handleEnded() {
     props.list.shift();
     firebase.database().ref("rooms/" + roomId + "/songs/").child(key).remove();
-    console.log('---ended');
     setStarted(false);
   }
 
@@ -84,6 +82,8 @@ export function VideoPlayer(props) {
     setPlayer(player);
   }
 
+  console.log("data.progress-------->", data.progress)
+  console.log("props.list-------->", props.list)
   return (
     <div>
       {props.list && props.list.length !== 0 ? (
@@ -123,24 +123,24 @@ export function VideoPlayer(props) {
             </Card>
           </div>
           <div>
-            {/* {console.log("length of list:", data_list.length)} */}
             {props.list.length > 1 ? (
-              <Card>
+              <Card style={{ 'width': '165%' }}>
                 <Card.Header as="h5">Queue</Card.Header>
                 <Table striped>
-                  <thead>
+                  <thead style={{ 'display': 'table', 'width': '100%', 'table-layout': 'fixed' }}>
                     <tr>
                       <th></th>
                       <th>Song</th>
                       <th>Rating</th>
                       <th><center>Vote</center></th>
+                      <th>Added By</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody style={{ 'height': '277px', 'overflow': 'scroll', 'display': 'block' }}>
                     {props.list
                       .slice(1, props.list.length)
                       .map((song, ind) => (
-                        <tr key={song.val.title}>
+                        <tr key={song.val.title} style={{ 'display': 'table', 'width': '100%', 'table-layout': 'fixed' }}>
                           <td>{ind + 1}</td>
                           <td>{song.val.title}</td>
                           <td>{song.val.rating}</td>
@@ -165,6 +165,9 @@ export function VideoPlayer(props) {
                               Downvote
                               </Button>
                             {/* </ButtonToolbar> */}
+                          </td>
+                          <td>
+                            {song.val.addedBy}
                           </td>
                         </tr>
                       ))}
