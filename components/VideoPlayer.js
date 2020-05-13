@@ -12,7 +12,6 @@ import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import firebase from "../helpers/firebase";
-import BootstrapTable from 'react-bootstrap-table-next';
 
 export function VideoPlayer(props) {
   let queue = props.queue;
