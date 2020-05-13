@@ -59,15 +59,25 @@ const Room = (props) => {
             router.push("/");
           }
         });
+
       firebaseRef = firebase.database().ref("rooms/" + roomid + "/songs");
-      firebaseRef.on("value", (snapshot) => {
+      firebaseRef.orderByChild("position").on("value", (snapshot) => {
         // Grab the current value of what was written to the Realtime Database.
         const tempList = [];
         snapshot.forEach((child) => {
           tempList.push({ key: child.key, val: child.val() });
         });
-        setList(tempList);
-      });
+        // Set first song to largest position so that doesn't get moved from the front
+        if (tempList.length > 0)
+          firebase
+            .database()
+            .ref("rooms/" + roomid + "/songs/")
+            .child(tempList[tempList.length - 1].key)
+            .child("position")
+            .set(Number.MAX_VALUE);
+        setList(tempList.reverse());
+      });  
+
       window.addEventListener("beforeunload", function (event) {
         roomRef.child("users/" + userid).remove();
         roomRef.once("value").then((res) => {
@@ -103,6 +113,11 @@ const Room = (props) => {
     } catch (err) {
       router.push("/");
     }
+
+    // return a cleanup function that will get called by React on unmount
+    return () => {
+      firebaseRef.off();
+    };
   }, []);
 
   return (

@@ -1,4 +1,5 @@
 import ReactPlayer from "react-player";
+import { CaretUpFill, CaretDownFill } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -80,6 +81,7 @@ export function VideoPlayer(props) {
   }
 
   function handleReady() {
+    console.log("---ready");
     setStarted(false);
   }
 
@@ -99,7 +101,7 @@ export function VideoPlayer(props) {
   }
 
   function handleSkipToEnd() {
-    player.seekTo(player.getDuration() - 3, "seconds");
+    handleEnded();
   }
 
   function handleEnded() {
@@ -115,7 +117,126 @@ export function VideoPlayer(props) {
   function initPlayer(player) {
     setPlayer(player);
   }
-  // console.error("current progress")
+
+  function changePosition(song, change) {
+    firebase
+      .database()
+      .ref("rooms/" + roomId + "/songs")
+      .child(song.key)
+      .once("value")
+      .then(function (snapshot) {
+        let p = snapshot.child("position").val() + change;
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/songs")
+          .child(song.key)
+          .child("position")
+          .set(p);
+        let r = snapshot.child("rating").val() + change;
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/songs")
+          .child(song.key)
+          .child("rating")
+          .set(r);
+      });
+  }
+
+  function upvote(song) {
+    if (
+      song.val.votedUsers != null &&
+      song.val.votedUsers[props.user.nickname] != null
+    ) {
+      let vote = song.val.votedUsers[props.user.nickname].vote;
+      if (vote == 1) {
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
+          .child(props.user.nickname)
+          .remove();
+        changePosition(song, -1);
+      } else if (vote == -1) {
+        firebase
+          .database()
+          .ref(
+            "rooms/" +
+              roomId +
+              "/songs/" +
+              song.key +
+              "/votedUsers/" +
+              props.user.nickname
+          )
+          .child("vote")
+          .set(1);
+        changePosition(song, 2);
+      }
+    } else {
+      firebase
+        .database()
+        .ref(
+          "rooms/" +
+            roomId +
+            "/songs/" +
+            song.key +
+            "/votedUsers/" +
+            props.user.nickname
+        )
+        .update({ vote: 1 });
+      changePosition(song, 1);
+    }
+  }
+
+  function downvote(song) {
+    if (
+      song.val.votedUsers != null &&
+      song.val.votedUsers[props.user.nickname] != null
+    ) {
+      let vote = song.val.votedUsers[props.user.nickname].vote;
+      if (vote == -1) {
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
+          .child(props.user.nickname)
+          .remove();
+        changePosition(song, 1);
+      } else if (vote == 1) {
+        firebase
+          .database()
+          .ref(
+            "rooms/" +
+              roomId +
+              "/songs/" +
+              song.key +
+              "/votedUsers/" +
+              props.user.nickname
+          )
+          .child("vote")
+          .set(-1);
+        changePosition(song, -2);
+      }
+    } else {
+      firebase
+        .database()
+        .ref(
+          "rooms/" +
+            roomId +
+            "/songs/" +
+            song.key +
+            "/votedUsers/" +
+            props.user.nickname
+        )
+        .update({ vote: -1 });
+      changePosition(song, -1);
+    }
+  }
+
+  function getVote(song) {
+    return song.val.votedUsers != null &&
+      song.val.votedUsers[props.user.nickname] != null
+      ? song.val.votedUsers[props.user.nickname].vote
+      : 0;
+  }
+
   return (
     <div>
       {props.list && props.list.length !== 0 ? (
@@ -180,9 +301,7 @@ export function VideoPlayer(props) {
                       <th></th>
                       <th>Song</th>
                       <th>Rating</th>
-                      <th>
-                        <center>Vote</center>
-                      </th>
+                      <th>Vote</th>
                       <th>Added By</th>
                     </tr>
                   </thead>
@@ -195,28 +314,44 @@ export function VideoPlayer(props) {
                   >
                     {props.list.slice(1, props.list.length).map((song, ind) => (
                       <tr
-                        key={song.val.title}
                         style={{
                           display: "table",
                           width: "100%",
-                          tableLayout: "fixed",
+                          "table-layout": "fixed",
                         }}
                       >
                         <td>{ind + 1}</td>
                         <td>{song.val.title}</td>
                         <td>{song.val.rating}</td>
                         <td>
-                          {/* <ButtonToolbar> */}
-                          <Button variant="outline-success" size="sm" block>
-                            Upvote
-                          </Button>
-                          <div>
-                            <center></center>
-                          </div>
-                          <Button variant="outline-danger" size="sm" block>
-                            Downvote
-                          </Button>
-                          {/* </ButtonToolbar> */}
+                          {song.val.addedBy !== props.user.nickname ? (
+                            <div>
+                              <Button
+                                variant={
+                                  getVote(song) == 1
+                                    ? "primary"
+                                    : "outline-primary"
+                                }
+                                size="sm"
+                                onClick={() => upvote(song)}
+                              >
+                                <CaretUpFill />
+                              </Button>
+                              <Button
+                                variant={
+                                  getVote(song) == -1
+                                    ? "danger"
+                                    : "outline-danger"
+                                }
+                                size="sm"
+                                onClick={() => downvote(song)}
+                              >
+                                <CaretDownFill />
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button variant="danger">Delete</Button>
+                          )}
                         </td>
                         <td>{song.val.addedBy}</td>
                       </tr>
