@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 const JoinRoom = () => {
   const [roomId, setRoomId] = useState("");
   const [error, setError] = useState(false);
+  const [invalidId, setInvalidId] = useState(false);
 
   function join() {
     firebase
@@ -16,11 +17,15 @@ const JoinRoom = () => {
       .once("value")
       .then((res) => {
         console.log({ roomId });
-        if (roomId && res.hasChild(roomId)) {
+        if (res.hasChild(roomId)) {
           Router.push("/room/" + roomId);
         } else {
           setError(true);
+          setInvalidId(false);
         }
+      })
+      .catch((err) => {
+        setInvalidId(true);
       });
   }
 
@@ -44,6 +49,7 @@ const JoinRoom = () => {
       ) : (
         <p></p>
       )}
+      {invalidId ? <p>Invalid ID, please try a different one</p> : <p></p>}
     </div>
   );
 };
