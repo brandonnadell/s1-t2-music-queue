@@ -1,5 +1,6 @@
 import ReactPlayer from "react-player";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Alert from "react-bootstrap/Alert";
 import Image from "react-bootstrap/Image";
@@ -13,6 +14,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import firebase from "../helpers/firebase";
 
+let creator = ""
 export function VideoPlayer(props) {
   let queue = props.queue;
   let list = props.list[0];
@@ -34,6 +36,13 @@ export function VideoPlayer(props) {
   const [playing, setPlaying] = useState("");
   const [progress, setProgress] = useState("");
   const [started, setStarted] = useState("");
+
+  useEffect(() => {
+    let roomRef = firebase.database().ref("rooms/").child(roomId);
+    roomRef.once("value").then((snapshot) => {
+      creator = snapshot.val().creator
+    });
+  }, []);
 
   const divStyle = {
     display: "flex",
@@ -57,6 +66,19 @@ export function VideoPlayer(props) {
   function handleStart() {
     setPlaying(true);
     setStarted(true);
+    if (props.user.nickname !== creator) {
+      let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
+      if (ref) {
+        ref.once("value").then((snapshot) => {
+          if (snapshot && snapshot.toJSON()) {
+            let currProg = snapshot.toJSON().progress
+            player.seekTo(Math.floor(currProg), false);
+          }
+        });
+      }
+    }
+    else if (data.progress !== 0)
+      player.seekTo(data.progress, false);
   }
 
   function handleReady() {
@@ -64,7 +86,15 @@ export function VideoPlayer(props) {
   }
 
   function handleProgress() {
-    setProgress((player.getCurrentTime() / player.getDuration()) * 100);
+    let currentProg = (player.getCurrentTime() / player.getDuration()) * 100
+    if (props.user.nickname === creator) {
+      if (Math.abs(currentProg - data.progress) > 1) {
+        firebase.database().ref("rooms/" + roomId + "/songs/" + key).update({
+          progress: player.getCurrentTime()
+        });
+      }
+    }
+    setProgress(setProgress(currentProg));
   }
 
   function handleSkipToEnd() {
@@ -72,17 +102,15 @@ export function VideoPlayer(props) {
   }
 
   function handleEnded() {
-    props.list.shift();
-    firebase.database().ref("rooms/" + roomId + "/songs/").child(key).remove();
+    if (creator == props.user.nickname)
+      firebase.database().ref("rooms/" + roomId + "/songs/").child(key).remove();
     setStarted(false);
   }
 
   function initPlayer(player) {
     setPlayer(player);
   }
-
-  console.log("data.progress-------->", data.progress)
-  console.log("props.list-------->", props.list)
+  // console.error("current progress")
   return (
     <div>
       {props.list && props.list.length !== 0 ? (
@@ -94,23 +122,28 @@ export function VideoPlayer(props) {
                 <Card.Body>
                   <div>
                     <div>
-                      <Button variant="outline-primary" onClick={handleToggle}>
-                        {playing ? "Pause" : "Play"}
-                      </Button>
+                      <div>
+                        {playing ? "Playing" : "Paused"}: {title}
+                      </div>
+                      {props.user.nickname === creator ? (
+                        <div>
+                          <ButtonGroup aria-label="Song Options">
+                            <Button variant="outline-primary" onClick={handleToggle}>
+                              {playing ? "Pause" : "Play"}
+                            </Button>
+                            <Button
+                              variant="outline-primary"
+                              onClick={handleSkipToEnd}
+                            >
+                              Skip to End
+                              </Button>
+                          </ButtonGroup>
+                        </div>
+                      ) : (<div></div>)}
                     </div>
-                    <div>
-                      {playing ? "Playing" : "Paused"}: {title}
-                    </div>
+
                     <div>
                       <ProgressBar now={progress} />
-                    </div>
-                    <div>
-                      <Button
-                        variant="outline-primary"
-                        onClick={handleSkipToEnd}
-                      >
-                        Skip to End
-                      </Button>
                     </div>
                   </div>
                 </Card.Body>
@@ -126,7 +159,7 @@ export function VideoPlayer(props) {
               <Card style={{ 'width': '165%' }}>
                 <Card.Header as="h5">Queue</Card.Header>
                 <Table striped>
-                  <thead style={{ 'display': 'table', 'width': '100%', 'table-layout': 'fixed' }}>
+                  <thead style={{ 'display': 'table', 'width': '100%', 'tableLayout': 'fixed' }}>
                     <tr>
                       <th></th>
                       <th>Song</th>
@@ -139,7 +172,7 @@ export function VideoPlayer(props) {
                     {props.list
                       .slice(1, props.list.length)
                       .map((song, ind) => (
-                        <tr key={song.val.title} style={{ 'display': 'table', 'width': '100%', 'table-layout': 'fixed' }}>
+                        <tr key={song.val.title} style={{ 'display': 'table', 'width': '100%', 'tableLayout': 'fixed' }}>
                           <td>{ind + 1}</td>
                           <td>{song.val.title}</td>
                           <td>{song.val.rating}</td>
@@ -197,7 +230,7 @@ export function VideoPlayer(props) {
         onEnded={handleEnded}
         config={{
           youtube: {
-            playerVars: { disablekb: 1, autoplay: 1, start: data.progress },
+            playerVars: { disablekb: 1, autoplay: 1, start: data.progress ? Math.floor(data.progress) : 0 },
           },
         }}
       />
