@@ -7,7 +7,6 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { requiredAuth } from "../../utils/ssr";
 import firebase from "../../helpers/firebase";
-import Button from "react-bootstrap/Button";
 
 export const getServerSideProps = requiredAuth;
 
