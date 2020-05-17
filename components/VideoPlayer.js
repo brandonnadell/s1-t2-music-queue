@@ -14,7 +14,6 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import firebase from "../helpers/firebase";
 
-let creator = ""
 export function VideoPlayer(props) {
   let queue = props.queue;
   let list = props.list[0];
@@ -24,6 +23,7 @@ export function VideoPlayer(props) {
   let roomId = props.roomId;
   let data = {}
   let key = ""
+  let creator = props.admin
   if (list && list.length !== 0) {
     data = list.val;
     key = list.key;
@@ -37,12 +37,12 @@ export function VideoPlayer(props) {
   const [progress, setProgress] = useState("");
   const [started, setStarted] = useState("");
 
-  useEffect(() => {
-    let roomRef = firebase.database().ref("rooms/").child(roomId);
-    roomRef.once("value").then((snapshot) => {
-      creator = snapshot.val().creator
-    });
-  }, []);
+  // useEffect(() => {
+  //   let roomRef = firebase.database().ref("rooms/").child(roomId);
+  //   roomRef.once("value").then((snapshot) => {
+  //     creator = snapshot.val().creator
+  //   });
+  // }, []);
 
   const divStyle = {
     display: "flex",

@@ -14,6 +14,7 @@ const Room = (props) => {
   const router = useRouter();
   const { roomid } = router.query;
   const [list, setList] = useState([]);
+  const [admin, setAdmin] = useState("");
   const user = props.user;
   let userid;
   let firebaseRef;
@@ -37,6 +38,7 @@ const Room = (props) => {
           } else {
             roomRef.on("value", (snapshot) => {
               creator = snapshot.val().creator;
+              setAdmin(creator);
             });
           }
         });
@@ -68,14 +70,15 @@ const Room = (props) => {
                   const tmp = list[0];
                   roomRef.child("creator").set(tmp);
                   creator = tmp;
+                  setAdmin(creator);
                   console.log(tmp);
-
                   console.log(creator);
                 });
             }
           } else {
             roomRef.child("creator").set(null);
             roomRef.remove();
+            setAdmin("");
           }
         });
       });
@@ -98,7 +101,7 @@ const Room = (props) => {
         </div>
         <div>
           {/* {console.log("song list object: ", list)} */}
-          <VideoPlayer list={list} muted={false} roomId={roomid} user={user} />
+          <VideoPlayer list={list} muted={false} roomId={roomid} user={user} admin={admin} />
         </div>
       </div>
     </Layout>
