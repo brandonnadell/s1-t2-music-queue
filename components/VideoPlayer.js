@@ -13,7 +13,7 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import firebase from "../helpers/firebase";
+import firebase from "../utils/firebase";
 
 export function VideoPlayer(props) {
   let queue = props.queue;
