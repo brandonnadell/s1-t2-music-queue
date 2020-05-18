@@ -114,10 +114,6 @@ const Room = (props) => {
       router.push("/");
     }
 
-    // return a cleanup function that will get called by React on unmount
-    return () => {
-      firebaseRef.off();
-    };
   }, []);
 
   return (
