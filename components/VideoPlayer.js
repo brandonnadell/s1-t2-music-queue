@@ -14,7 +14,6 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import firebase from "../helpers/firebase";
 
-let creator = ""
 export function VideoPlayer(props) {
   let queue = props.queue;
   let list = props.list[0];
@@ -22,8 +21,9 @@ export function VideoPlayer(props) {
   let title = "";
   let img = "";
   let roomId = props.roomId;
-  let data = {}
-  let key = ""
+  let data = {};
+  let key = "";
+  let creator = props.admin;
   if (list && list.length !== 0) {
     data = list.val;
     key = list.key;
@@ -37,12 +37,12 @@ export function VideoPlayer(props) {
   const [progress, setProgress] = useState("");
   const [started, setStarted] = useState("");
 
-  useEffect(() => {
+  /*  useEffect(() => {
     let roomRef = firebase.database().ref("rooms/").child(roomId);
     roomRef.once("value").then((snapshot) => {
       creator = snapshot.val().creator
     });
-  }, []);
+  }, []); */
 
   const divStyle = {
     display: "flex",
@@ -71,14 +71,12 @@ export function VideoPlayer(props) {
       if (ref) {
         ref.once("value").then((snapshot) => {
           if (snapshot && snapshot.toJSON()) {
-            let currProg = snapshot.toJSON().progress
+            let currProg = snapshot.toJSON().progress;
             player.seekTo(Math.floor(currProg), false);
           }
         });
       }
-    }
-    else if (data.progress !== 0)
-      player.seekTo(data.progress, false);
+    } else if (data.progress !== 0) player.seekTo(data.progress, false);
   }
 
   function handleReady() {
@@ -86,12 +84,15 @@ export function VideoPlayer(props) {
   }
 
   function handleProgress() {
-    let currentProg = (player.getCurrentTime() / player.getDuration()) * 100
+    let currentProg = (player.getCurrentTime() / player.getDuration()) * 100;
     if (props.user.nickname === creator) {
       if (Math.abs(currentProg - data.progress) > 1) {
-        firebase.database().ref("rooms/" + roomId + "/songs/" + key).update({
-          progress: player.getCurrentTime()
-        });
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/songs/" + key)
+          .update({
+            progress: player.getCurrentTime(),
+          });
       }
     }
     setProgress(setProgress(currentProg));
@@ -103,7 +104,11 @@ export function VideoPlayer(props) {
 
   function handleEnded() {
     if (creator == props.user.nickname)
-      firebase.database().ref("rooms/" + roomId + "/songs/").child(key).remove();
+      firebase
+        .database()
+        .ref("rooms/" + roomId + "/songs/")
+        .child(key)
+        .remove();
     setStarted(false);
   }
 
@@ -128,7 +133,10 @@ export function VideoPlayer(props) {
                       {props.user.nickname === creator ? (
                         <div>
                           <ButtonGroup aria-label="Song Options">
-                            <Button variant="outline-primary" onClick={handleToggle}>
+                            <Button
+                              variant="outline-primary"
+                              onClick={handleToggle}
+                            >
                               {playing ? "Pause" : "Play"}
                             </Button>
                             <Button
@@ -136,10 +144,12 @@ export function VideoPlayer(props) {
                               onClick={handleSkipToEnd}
                             >
                               Skip to End
-                              </Button>
+                            </Button>
                           </ButtonGroup>
                         </div>
-                      ) : (<div></div>)}
+                      ) : (
+                        <div></div>
+                      )}
                     </div>
 
                     <div>
@@ -148,72 +158,80 @@ export function VideoPlayer(props) {
                   </div>
                 </Card.Body>
               ) : (
-                  <Spinner animation="border" role="status">
-                    <span className="sr-only">Loading...</span>
-                  </Spinner>
-                )}
+                <Spinner animation="border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>
+              )}
             </Card>
           </div>
           <div>
             {props.list.length > 1 ? (
-              <Card style={{ 'width': '165%' }}>
+              <Card style={{ width: "165%" }}>
                 <Card.Header as="h5">Queue</Card.Header>
                 <Table striped>
-                  <thead style={{ 'display': 'table', 'width': '100%', 'tableLayout': 'fixed' }}>
+                  <thead
+                    style={{
+                      display: "table",
+                      width: "100%",
+                      tableLayout: "fixed",
+                    }}
+                  >
                     <tr>
                       <th></th>
                       <th>Song</th>
                       <th>Rating</th>
-                      <th><center>Vote</center></th>
+                      <th>
+                        <center>Vote</center>
+                      </th>
                       <th>Added By</th>
                     </tr>
                   </thead>
-                  <tbody style={{ 'height': '277px', 'overflow': 'scroll', 'display': 'block' }}>
-                    {props.list
-                      .slice(1, props.list.length)
-                      .map((song, ind) => (
-                        <tr key={song.val.title} style={{ 'display': 'table', 'width': '100%', 'tableLayout': 'fixed' }}>
-                          <td>{ind + 1}</td>
-                          <td>{song.val.title}</td>
-                          <td>{song.val.rating}</td>
-                          <td>
-                            {/* <ButtonToolbar> */}
-                            <Button
-                              variant="outline-success"
-                              size="sm"
-                              block
-
-                            >
-                              Upvote
-                              </Button>
-                            <div>
-                              <center></center>
-                            </div>
-                            <Button
-                              variant="outline-danger"
-                              size="sm"
-                              block
-                            >
-                              Downvote
-                              </Button>
-                            {/* </ButtonToolbar> */}
-                          </td>
-                          <td>
-                            {song.val.addedBy}
-                          </td>
-                        </tr>
-                      ))}
+                  <tbody
+                    style={{
+                      height: "277px",
+                      overflow: "scroll",
+                      display: "block",
+                    }}
+                  >
+                    {props.list.slice(1, props.list.length).map((song, ind) => (
+                      <tr
+                        key={song.val.title}
+                        style={{
+                          display: "table",
+                          width: "100%",
+                          tableLayout: "fixed",
+                        }}
+                      >
+                        <td>{ind + 1}</td>
+                        <td>{song.val.title}</td>
+                        <td>{song.val.rating}</td>
+                        <td>
+                          {/* <ButtonToolbar> */}
+                          <Button variant="outline-success" size="sm" block>
+                            Upvote
+                          </Button>
+                          <div>
+                            <center></center>
+                          </div>
+                          <Button variant="outline-danger" size="sm" block>
+                            Downvote
+                          </Button>
+                          {/* </ButtonToolbar> */}
+                        </td>
+                        <td>{song.val.addedBy}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </Table>
               </Card>
             ) : (
-                <div></div>
-              )}
+              <div></div>
+            )}
           </div>
         </div>
       ) : (
-          <div></div>
-        )}
+        <div></div>
+      )}
       <ReactPlayer
         url={url}
         key={key}
@@ -230,7 +248,11 @@ export function VideoPlayer(props) {
         onEnded={handleEnded}
         config={{
           youtube: {
-            playerVars: { disablekb: 1, autoplay: 1, start: data.progress ? Math.floor(data.progress) : 0 },
+            playerVars: {
+              disablekb: 1,
+              autoplay: 1,
+              start: data.progress ? Math.floor(data.progress) : 0,
+            },
           },
         }}
       />
