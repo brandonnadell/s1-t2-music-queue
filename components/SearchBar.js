@@ -8,11 +8,11 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
-import firebase from "../helpers/firebase"
+import firebase from "../helpers/firebase";
 
 var songs = [];
 var maxResults;
-var songId = 0
+var songId = 0;
 
 const SearchBar = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,6 +21,7 @@ const SearchBar = (props) => {
   const [moreResultsCount, setMoreResultsCount] = useState(0);
   const [error, setError] = useState("");
   const [data, setData] = useState("");
+  let roomId = props.roomId;
 
   async function fetchData() {
     setLoading(true);
@@ -55,17 +56,38 @@ const SearchBar = (props) => {
   }
 
   function sendUrl(url, title, img) {
-    let videoUrl = "https://www.youtube.com/watch?v=" + url
-    return firebase.database().ref("rooms/" + props.roomId + "/songs/").push().set({
-      title: title,
-      image: img,
-      videoUrl: videoUrl,
-      downvote: 0,
-      upvote: 0,
-      rating: 0,
-      progress: 0,
-      addedBy: props.user.nickname
-    })
+    let videoUrl = "https://www.youtube.com/watch?v=" + url;
+    firebase
+      .database()
+      .ref("rooms/" + roomId + "/currentPosition")
+      .once("value", function (snapshot) {
+        let pos = snapshot.val();
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/songs/")
+          .push()
+          .set({
+            title: title,
+            image: img,
+            videoUrl: videoUrl,
+            rating: 0,
+            position: pos,
+            votedUsers: [],
+            progress: 0,
+            addedBy: props.user.nickname,
+          })
+          .then(() => {
+            pos--;
+            firebase
+              .database()
+              .ref("rooms/" + roomId + "/currentPosition")
+              .set(pos);
+            console.log("Succesfully wrote to db. CurrPos = " + pos);
+          });
+        // console.log(pos);
+        // pos++;
+        // console.log(pos);
+      });
   }
 
   if (searchTerm.length !== 0) {
@@ -116,63 +138,63 @@ const SearchBar = (props) => {
               <span className="sr-only">Loading...</span>
             </Spinner>
           ) : (
-              <div>
-                <Table hover variant="light">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Title</th>
-                      <th>Artist</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {songs &&
-                      songs.slice(0, maxResults).map((song, ind) => (
-                        <tr key={song.title}>
-                          <td>
-                            <Button
-                              variant="outline-success"
-                              onClick={() =>
-                                sendUrl(song.videoId, song.title, song.img)
-                              }
-                            >
-                              Queue
+            <div>
+              <Table hover variant="light">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {songs &&
+                    songs.slice(0, maxResults).map((song, ind) => (
+                      <tr key={song.title}>
+                        <td>
+                          <Button
+                            variant="outline-success"
+                            onClick={() =>
+                              sendUrl(song.videoId, song.title, song.img)
+                            }
+                          >
+                            Queue
                           </Button>
-                          </td>
-                          <td>
-                            <Image
-                              className="img-responsive"
-                              src={song.img}
-                              height="40"
-                              width="40"
-                              rounded
-                            />{" "}
-                            {song.title}
-                          </td>
-                          <td>{song.artist}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </Table>
-                <Card.Footer>
-                  {maxResults === 3 ? (
-                    <Button
-                      onClick={() => displayAllResults(10)}
-                      variant="outline-dark"
-                    >
-                      Show More Results
+                        </td>
+                        <td>
+                          <Image
+                            className="img-responsive"
+                            src={song.img}
+                            height="40"
+                            width="40"
+                            rounded
+                          />{" "}
+                          {song.title}
+                        </td>
+                        <td>{song.artist}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+              <Card.Footer>
+                {maxResults === 3 ? (
+                  <Button
+                    onClick={() => displayAllResults(10)}
+                    variant="outline-dark"
+                  >
+                    Show More Results
                   </Button>
-                  ) : (
-                      <Button
-                        onClick={() => displayAllResults(3)}
-                        variant="outline-dark"
-                      >
-                        Show Less Results
+                ) : (
+                  <Button
+                    onClick={() => displayAllResults(3)}
+                    variant="outline-dark"
+                  >
+                    Show Less Results
                   </Button>
-                    )}
-                </Card.Footer>
-              </div>
-            )}
+                )}
+              </Card.Footer>
+            </div>
+          )}
         </Card>
       )}
     </div>
