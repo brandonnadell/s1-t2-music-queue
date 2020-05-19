@@ -6,6 +6,14 @@ import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
 import { loadGetInitialProps } from "next/dist/next-server/lib/utils";
+import firebase from "../client/firebase";
+
+async function logOut() {
+  if (window)
+    window.location.href =
+      "https://cs48-s20-s1-t2-prod.herokuapp.com/api/logout";
+  firebase.signOut();
+}
 
 function AppNavbar(props) {
   const user = props.user;
@@ -33,7 +41,7 @@ function AppNavbar(props) {
                   </>
                 }
               >
-                <NavDropdown.Item className="text-danger" href="/api/logout">
+                <NavDropdown.Item className="text-danger" onClick={logOut}>
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>

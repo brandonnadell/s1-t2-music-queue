@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Router from "next/router";
-import firebase from "../utils/firebase";
+import firebase from "../client/firebase";
 
 export default function CreateRoom(props) {
   async function redirect() {
