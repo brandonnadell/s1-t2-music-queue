@@ -18,5 +18,6 @@ module.exports = {
       "viloxyf_z2GW6K4CT-KQD_MoLEA2wqv5jWuq4Jd0P7ymgG5GJGMpvMneXZzhK3sL",
     SESSION_COOKIE_LIFETIME: 7200, // 2 hours
     MONGODB_URI: process.env.MONGODB_URI,
+    FIREBASE_ENV: process.env.FIREBASE_ENV,
   },
 };

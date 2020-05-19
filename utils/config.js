@@ -15,7 +15,7 @@ if (typeof window === "undefined") {
     SESSION_COOKIE_SECRET: process.env.SESSION_COOKIE_SECRET,
     SESSION_COOKIE_LIFETIME: process.env.SESSION_COOKIE_LIFETIME,
     MONGODB_URI: process.env.MONGODB_URI,
-    NODE_ENV: process.env.NODE_ENV,
+    FIREBASE_ENV: process.env.FIREBASE_ENV,
   };
 } else {
   /**

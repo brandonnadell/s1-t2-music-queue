@@ -23,7 +23,8 @@ var prodConfig = {
   measurementId: "G-ZYFFQ1VKQ0",
 };
 
-var config = configuration.NODE_ENV === "production" ? prodConfig : devConfig;
+var config =
+  configuration.FIREBASE_ENV === "production" ? prodConfig : devConfig;
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
