@@ -8,11 +8,7 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
-<<<<<<< HEAD
-import firebase from "../helpers/firebase";
-=======
 import firebase from "../utils/firebase";
->>>>>>> pm - firebase prod + dev and configure env variables
 
 var songs = [];
 var maxResults;
@@ -61,7 +57,6 @@ const SearchBar = (props) => {
 
   function sendUrl(url, title, img) {
     let videoUrl = "https://www.youtube.com/watch?v=" + url;
-<<<<<<< HEAD
     firebase
       .database()
       .ref("rooms/" + roomId + "/currentPosition")
@@ -92,21 +87,6 @@ const SearchBar = (props) => {
         // console.log(pos);
         // pos++;
         // console.log(pos);
-=======
-    return firebase
-      .database()
-      .ref("rooms/" + props.roomId + "/songs/")
-      .push()
-      .set({
-        title: title,
-        image: img,
-        videoUrl: videoUrl,
-        downvote: 0,
-        upvote: 0,
-        rating: 0,
-        progress: 0,
-        addedBy: props.user.nickname,
->>>>>>> pm - firebase prod + dev and configure env variables
       });
   }
 
