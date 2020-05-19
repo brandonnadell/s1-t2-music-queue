@@ -41,7 +41,7 @@ export function VideoPlayer(props) {
   /*  useEffect(() => {
     let roomRef = firebase.database().ref("rooms/").child(roomId);
     roomRef.once("value").then((snapshot) => {
-      creator = snapshot.val().creator
+      creator = snapshot.val().creator;
     });
   }, []); */
 
@@ -237,6 +237,13 @@ export function VideoPlayer(props) {
       : 0;
   }
 
+  function removeSong(song) {
+    firebase
+      .database()
+      .ref("rooms/" + props.roomId + "/songs/" + song.key)
+      .remove();
+  }
+  // console.error("current progress")
   return (
     <div>
       {props.list && props.list.length !== 0 ? (
