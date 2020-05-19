@@ -1,7 +1,7 @@
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Router from "next/router";
-import firebase from "../helpers/firebase";
+import firebase from "../utils/firebase";
 import FormControl from "react-bootstrap/FormControl";
 import React, { useState, useEffect } from "react";
 

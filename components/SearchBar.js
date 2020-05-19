@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import API_KEY from "../helpers/api";
+import API_KEY from "../utils/youtube_api";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
@@ -8,7 +8,7 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
-import firebase from "../helpers/firebase";
+import firebase from "../utils/firebase";
 
 var songs = [];
 var maxResults;
