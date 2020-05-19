@@ -27,5 +27,6 @@ if (typeof window === "undefined") {
     AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
     REDIRECT_URI: process.env.REDIRECT_URI,
     POST_LOGOUT_REDIRECT_URI: process.env.POST_LOGOUT_REDIRECT_URI,
+    FIREBASE_ENV: process.env.FIREBASE_ENV,
   };
 }
