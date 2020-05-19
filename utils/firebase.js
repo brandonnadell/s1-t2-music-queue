@@ -24,7 +24,7 @@ var prodConfig = {
 };
 
 var config =
-  configuration.FIREBASE_ENV === "production" ? prodConfig : devConfig;
+  configuration.FIREBASE_ENV === "development" ? devConfig : prodConfig;
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
