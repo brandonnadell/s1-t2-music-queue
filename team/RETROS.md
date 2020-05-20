@@ -1,4 +1,5 @@
 # Retro 5/11/20
+
 - Led by: Brandon Nadell
 - Present: Ryan Simone, Pranav Madapurmath, Yuval Steinhart, Zhiyu Ning, Isaac Lam
 

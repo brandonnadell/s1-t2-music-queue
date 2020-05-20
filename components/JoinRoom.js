@@ -11,9 +11,9 @@ const JoinRoom = (props) => {
 
   function join() {
     props.database
-      .getRoom()
+      .getRooms()
       .then((res) => {
-        if (res.hasChild(roomId)) {
+        if (res?.hasChild(roomId)) {
           Router.push("/room/" + roomId);
         } else {
           setError(true);
@@ -22,6 +22,7 @@ const JoinRoom = (props) => {
       })
       .catch((err) => {
         setInvalidId(true);
+        setError(false);
       });
   }
 

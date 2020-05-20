@@ -250,7 +250,7 @@ firebase.createRoom = (user) => {
   return roomKey;
 };
 
-firebase.getRoom = (roomId, setInvalidId, setError) => {
+firebase.getRooms = () => {
   return firebase.database().ref("rooms").once("value");
 };
 
