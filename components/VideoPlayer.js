@@ -238,10 +238,34 @@ export function VideoPlayer(props) {
   }
 
   function removeSong(song) {
-    firebase
+    let firebaseRef = firebase
       .database()
-      .ref("rooms/" + props.roomId + "/songs/" + song.key)
-      .remove();
+      .ref("rooms/" + props.roomid + "/songs");
+    firebaseRef
+      .orderByKey()
+      .once("value")
+      .then((snapshot) => {
+        // Grab the current value of what was written to the Realtime Database.
+        let found = false;
+        snapshot.forEach((child) => {
+          if (child.key === song.key) {
+            found = true;
+          } else if (found) {
+            let p = snapshot.child("position").val() - 1;
+            firebase
+              .database()
+              .ref("rooms/" + roomId + "/songs")
+              .child(song.key)
+              .child("position")
+              .set(p);
+          }
+        });
+
+        firebase
+          .database()
+          .ref("rooms/" + props.roomId + "/songs/" + song.key)
+          .remove();
+      });
   }
   // console.error("current progress")
   return (
@@ -357,7 +381,12 @@ export function VideoPlayer(props) {
                               </Button>
                             </div>
                           ) : (
-                            <Button variant="danger">Delete</Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => removeSong(song)}
+                            >
+                              Delete
+                            </Button>
                           )}
                         </td>
                         <td>{song.val.addedBy}</td>
