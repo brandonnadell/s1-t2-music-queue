@@ -11,7 +11,7 @@ import firebase from "../client/firebase";
 async function logOut() {
   if (window)
     window.location.href =
-      "https://cs48-s20-s1-t2-prod.herokuapp.com/api/logout";
+      "/api/logout";
   firebase.signOut();
 }
 
