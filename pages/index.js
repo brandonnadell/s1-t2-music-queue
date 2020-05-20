@@ -7,7 +7,7 @@ import JoinRoom from "../components/JoinRoom";
 export const getServerSideProps = optionalAuth;
 
 function HomePage(props) {
-  const user = props.user;
+  const { user } = props;
 
   return (
     <Layout user={user}>

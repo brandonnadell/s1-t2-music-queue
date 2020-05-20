@@ -8,7 +8,7 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
-import firebase from "../utils/firebase";
+import firebase from "../client/firebase";
 
 var songs = [];
 var maxResults;

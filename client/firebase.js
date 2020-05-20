@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import configuration from "./config";
+import configuration from "../utils/config";
 
 var devConfig = {
   apiKey: "AIzaSyBoZfWr11vupb6dh77zF9bQkUqO4VaYw-0",
@@ -29,4 +29,29 @@ var config =
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
+
+firebase.setAuthStateListener = (listener) => {
+  firebase.auth().onAuthStateChanged(listener);
+};
+
+firebase.getCurrentUser = () => {
+  return firebase.auth().currentUser;
+};
+
+firebase.updateProfile = async (profile) => {
+  if (!firebase.auth().currentUser) return;
+  await firebase.auth().currentUser.updateProfile({
+    displayName: profile.name,
+    photoURL: profile.picture,
+  });
+};
+
+firebase.setToken = async (token) => {
+  await firebase.auth().signInWithCustomToken(token);
+};
+
+firebase.signOut = async () => {
+  await firebase.auth().signOut();
+};
+
 export default firebase;

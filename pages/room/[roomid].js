@@ -6,7 +6,7 @@ import VideoPlayer from "../../components/VideoPlayer";
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { requiredAuth } from "../../utils/ssr";
-import firebase from "../../utils/firebase";
+import firebase from "../../client/firebase";
 
 export const getServerSideProps = requiredAuth;
 
@@ -76,7 +76,7 @@ const Room = (props) => {
             .child("position")
             .set(Number.MAX_VALUE);
         setList(tempList.reverse());
-      });  
+      });
 
       window.addEventListener("beforeunload", function (event) {
         roomRef.child("users/" + userid).remove();
@@ -113,7 +113,6 @@ const Room = (props) => {
     } catch (err) {
       router.push("/");
     }
-
   }, []);
 
   return (
