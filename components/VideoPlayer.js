@@ -265,6 +265,16 @@ export function VideoPlayer(props) {
           .database()
           .ref("rooms/" + props.roomId + "/songs/" + song.key)
           .remove();
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/currentPosition")
+          .once("value", function (snapshot) {
+            let pos = snapshot.val();
+            firebase
+              .database()
+              .ref("rooms/" + roomId + "/currentPosition")
+              .set(pos + 1);
+          });
       });
   }
   // console.error("current progress")
