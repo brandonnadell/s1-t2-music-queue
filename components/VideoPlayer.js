@@ -41,7 +41,7 @@ export function VideoPlayer(props) {
   /*  useEffect(() => {
     let roomRef = firebase.database().ref("rooms/").child(roomId);
     roomRef.once("value").then((snapshot) => {
-      creator = snapshot.val().creator
+      creator = snapshot.val().creator;
     });
   }, []); */
 
@@ -237,6 +237,47 @@ export function VideoPlayer(props) {
       : 0;
   }
 
+  function removeSong(song) {
+    let firebaseRef = firebase
+      .database()
+      .ref("rooms/" + props.roomId + "/songs");
+    firebaseRef
+      .orderByKey()
+      .once("value")
+      .then((snapshot) => {
+        // Grab the current value of what was written to the Realtime Database.
+        let found = false;
+        snapshot.forEach((child) => {
+          if (child.key === song.key) {
+            found = true;
+          } else if (found) {
+            let p = child.val().position + 1;
+            firebase
+              .database()
+              .ref("rooms/" + roomId + "/songs")
+              .child(child.key)
+              .child("position")
+              .set(p);
+          }
+        });
+
+        firebase
+          .database()
+          .ref("rooms/" + props.roomId + "/songs/" + song.key)
+          .remove();
+        firebase
+          .database()
+          .ref("rooms/" + roomId + "/currentPosition")
+          .once("value", function (snapshot) {
+            let pos = snapshot.val();
+            firebase
+              .database()
+              .ref("rooms/" + roomId + "/currentPosition")
+              .set(pos + 1);
+          });
+      });
+  }
+  // console.error("current progress")
   return (
     <div>
       {props.list && props.list.length !== 0 ? (
@@ -350,7 +391,12 @@ export function VideoPlayer(props) {
                               </Button>
                             </div>
                           ) : (
-                            <Button variant="danger">Delete</Button>
+                            <Button
+                              variant="danger"
+                              onClick={() => removeSong(song)}
+                            >
+                              Delete
+                            </Button>
                           )}
                         </td>
                         <td>{song.val.addedBy}</td>
