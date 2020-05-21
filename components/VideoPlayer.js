@@ -357,11 +357,15 @@ export function VideoPlayer(props) {
                     }}
                   >
                     <tr>
-                      <th></th>
-                      <th>Song</th>
-                      <th>Rating</th>
-                      <th>Vote</th>
-                      <th>Added By</th>
+                      <th style={{ width: "9%" }}></th>
+                      <th style={{ width: "46%" }}>Song</th>
+                      <th style={{ width: "10%" }}>
+                        <center>Rating</center>
+                      </th>
+                      <th style={{ width: "15%" }}>
+                        <center>Vote</center>
+                      </th>
+                      <th style={{ width: "20%" }}>Added By</th>
                     </tr>
                   </thead>
                   <tbody
@@ -380,45 +384,51 @@ export function VideoPlayer(props) {
                           tableLayout: "fixed",
                         }}
                       >
-                        <td>{ind + 1}</td>
-                        <td>{song.val.title}</td>
-                        <td>{song.val.rating}</td>
-                        <td>
+                        <td style={{ width: "9%" }}>{ind + 1}</td>
+                        <td style={{ width: "46%" }}>{song.val.title}</td>
+                        <td style={{ width: "10%" }}>
+                          <center>{song.val.rating}</center>
+                        </td>
+                        <td style={{ width: "15%" }}>
                           {song.val.addedBy !== props.user.nickname ? (
                             <div>
-                              <Button
-                                variant={
-                                  getVote(song) == 1
-                                    ? "primary"
-                                    : "outline-primary"
-                                }
-                                size="sm"
-                                onClick={() => upvote(song)}
-                              >
-                                <CaretUpFill />
-                              </Button>
-                              <Button
-                                variant={
-                                  getVote(song) == -1
-                                    ? "danger"
-                                    : "outline-danger"
-                                }
-                                size="sm"
-                                onClick={() => downvote(song)}
-                              >
-                                <CaretDownFill />
-                              </Button>
+                              <center>
+                                <Button
+                                  variant={
+                                    getVote(song) == 1
+                                      ? "primary"
+                                      : "outline-primary"
+                                  }
+                                  size="sm"
+                                  onClick={() => upvote(song)}
+                                >
+                                  <CaretUpFill />
+                                </Button>
+                                <Button
+                                  variant={
+                                    getVote(song) == -1
+                                      ? "danger"
+                                      : "outline-danger"
+                                  }
+                                  size="sm"
+                                  onClick={() => downvote(song)}
+                                >
+                                  <CaretDownFill />
+                                </Button>
+                              </center>
                             </div>
                           ) : (
-                            <Button
-                              variant="danger"
-                              onClick={() => removeSong(song)}
-                            >
-                              Delete
-                            </Button>
+                            <center>
+                              <Button
+                                variant="danger"
+                                onClick={() => removeSong(song)}
+                              >
+                                Delete
+                              </Button>
+                            </center>
                           )}
                         </td>
-                        <td>{song.val.addedBy}</td>
+                        <td style={{ width: "20%" }}>{song.val.addedBy}</td>
                       </tr>
                     ))}
                   </tbody>
