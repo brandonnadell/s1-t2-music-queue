@@ -240,7 +240,7 @@ export function VideoPlayer(props) {
   function removeSong(song) {
     let firebaseRef = firebase
       .database()
-      .ref("rooms/" + props.roomid + "/songs");
+      .ref("rooms/" + props.roomId + "/songs");
     firebaseRef
       .orderByKey()
       .once("value")
@@ -251,11 +251,11 @@ export function VideoPlayer(props) {
           if (child.key === song.key) {
             found = true;
           } else if (found) {
-            let p = snapshot.child("position").val() - 1;
+            let p = child.val().position + 1;
             firebase
               .database()
               .ref("rooms/" + roomId + "/songs")
-              .child(song.key)
+              .child(child.key)
               .child("position")
               .set(p);
           }
