@@ -34,16 +34,19 @@ export function VideoPlayer(props) {
   }
   let muted = props.muted;
   const [player, setPlayer] = useState("");
-  const [playing, setPlaying] = useState("");
+  const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState("");
   const [started, setStarted] = useState("");
 
-  /*  useEffect(() => {
-    let roomRef = firebase.database().ref("rooms/").child(roomId);
-    roomRef.once("value").then((snapshot) => {
-      creator = snapshot.val().creator
-    });
-  }, []); */
+  useEffect(() => {
+    if (
+      creator !== props.user.nickname &&
+      data &&
+      data.playing !== playing &&
+      player
+    )
+      handleToggle();
+  });
 
   const divStyle = {
     display: "flex",
@@ -53,13 +56,24 @@ export function VideoPlayer(props) {
   };
 
   function handleToggle() {
+    let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
     if (player.getSecondsLoaded() != null) {
       if (player.getInternalPlayer().getPlayerState() == 1) {
         player.getInternalPlayer().pauseVideo();
         setPlaying(false);
+        if (creator === props.user.nickname) {
+          ref.update({
+            playing: false,
+          });
+        }
       } else {
         player.getInternalPlayer().playVideo();
         setPlaying(true);
+        if (creator === props.user.nickname) {
+          ref.update({
+            playing: true,
+          });
+        }
       }
     }
   }
@@ -67,8 +81,8 @@ export function VideoPlayer(props) {
   function handleStart() {
     setPlaying(true);
     setStarted(true);
+    let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
     if (props.user.nickname !== creator) {
-      let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
       if (ref) {
         ref.once("value").then((snapshot) => {
           if (snapshot && snapshot.toJSON()) {
@@ -77,11 +91,15 @@ export function VideoPlayer(props) {
           }
         });
       }
-    } else if (data.progress !== 0) player.seekTo(data.progress, false);
+    } else {
+      if (data.progress !== 0) player.seekTo(data.progress, false);
+      ref.update({
+        playing: true,
+      });
+    }
   }
 
   function handleReady() {
-    console.log("---ready");
     setStarted(false);
   }
 
@@ -264,7 +282,7 @@ export function VideoPlayer(props) {
                               variant="outline-primary"
                               onClick={handleSkipToEnd}
                             >
-                              Skip to End
+                              Skip
                             </Button>
                           </ButtonGroup>
                         </div>
@@ -314,10 +332,11 @@ export function VideoPlayer(props) {
                   >
                     {props.list.slice(1, props.list.length).map((song, ind) => (
                       <tr
+                        key={song.title}
                         style={{
                           display: "table",
                           width: "100%",
-                          "table-layout": "fixed",
+                          tableLayout: "fixed",
                         }}
                       >
                         <td>{ind + 1}</td>

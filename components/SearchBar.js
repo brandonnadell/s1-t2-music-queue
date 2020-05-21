@@ -75,6 +75,7 @@ const SearchBar = (props) => {
             votedUsers: [],
             progress: 0,
             addedBy: props.user.nickname,
+            playing: false,
           })
           .then(() => {
             pos--;
