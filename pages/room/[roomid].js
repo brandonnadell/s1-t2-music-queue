@@ -120,7 +120,7 @@ const Room = (props) => {
       <p>Room: {roomid}</p>
       <div>
         <div>
-          <SearchBar roomId={roomid} user={user} />
+          <SearchBar roomId={roomid} user={user} database={firebase} />
         </div>
         <div>
           {/* {console.log("song list object: ", list)} */}
@@ -130,6 +130,7 @@ const Room = (props) => {
             roomId={roomid}
             user={user}
             admin={admin}
+            database={firebase}
           />
         </div>
       </div>

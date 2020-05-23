@@ -8,13 +8,13 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
-import firebase from "../client/firebase";
 
 var songs = [];
 var maxResults;
 var songId = 0;
 
 const SearchBar = (props) => {
+  const database = props.database;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCount, setSearchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -104,7 +104,7 @@ const SearchBar = (props) => {
                           <Button
                             variant="outline-success"
                             onClick={() =>
-                              firebase.createSong(
+                              database.createSong(
                                 song.videoId,
                                 song.title,
                                 song.img,

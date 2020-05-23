@@ -86,4 +86,186 @@ firebase.createSong = (url, title, img, roomId, name) => {
     });
 };
 
+firebase.updatePlaying = (roomId, key, status) => {
+  let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
+  ref.update({
+    playing: status,
+  });
+};
+
+firebase.syncPlayer = (roomId, key, player) => {
+  let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
+  if (ref) {
+    ref.once("value").then((snapshot) => {
+      if (snapshot && snapshot.toJSON()) {
+        let currProg = snapshot.toJSON().progress;
+        player.seekTo(Math.floor(currProg), false);
+      }
+    });
+  }
+};
+
+firebase.updateProgress = (roomId, key, player) => {
+  firebase
+    .database()
+    .ref("rooms/" + roomId + "/songs/" + key)
+    .update({
+      progress: player.getCurrentTime(),
+    });
+};
+
+firebase.removePlaying = (roomId, key) => {
+  firebase
+    .database()
+    .ref("rooms/" + roomId + "/songs/")
+    .child(key)
+    .remove();
+};
+
+firebase.removeUpvote = (roomId, song, user) => {
+  firebase
+    .database()
+    .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
+    .child(user.nickname)
+    .remove();
+};
+
+firebase.downvoteToUpvote = (roomId, song, user) => {
+  firebase
+    .database()
+    .ref(
+      "rooms/" + roomId + "/songs/" + song.key + "/votedUsers/" + user.nickname
+    )
+    .child("vote")
+    .set(1);
+};
+
+firebase.addUpvote = (roomId, song, user) => {
+  firebase
+    .database()
+    .ref(
+      "rooms/" + roomId + "/songs/" + song.key + "/votedUsers/" + user.nickname
+    )
+    .update({ vote: 1 });
+};
+
+firebase.removeDownvote = (roomId, song, user) => {
+  firebase
+    .database()
+    .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
+    .child(user.nickname)
+    .remove();
+};
+
+firebase.upvoteToDownvote = (roomId, song, user) => {
+  firebase
+    .database()
+    .ref(
+      "rooms/" + roomId + "/songs/" + song.key + "/votedUsers/" + user.nickname
+    )
+    .child("vote")
+    .set(-1);
+};
+
+firebase.addDownvote = (roomId, song, user) => {
+  firebase
+    .database()
+    .ref(
+      "rooms/" + roomId + "/songs/" + song.key + "/votedUsers/" + user.nickname
+    )
+    .update({ vote: -1 });
+};
+
+firebase.changePosition = (song, roomId, change) => {
+  firebase
+    .database()
+    .ref("rooms/" + roomId + "/songs")
+    .child(song.key)
+    .once("value")
+    .then(function (snapshot) {
+      let p = snapshot.child("position").val() + change;
+      firebase
+        .database()
+        .ref("rooms/" + roomId + "/songs")
+        .child(song.key)
+        .child("position")
+        .set(p);
+      let r = snapshot.child("rating").val() + change;
+      firebase
+        .database()
+        .ref("rooms/" + roomId + "/songs")
+        .child(song.key)
+        .child("rating")
+        .set(r);
+    });
+};
+
+firebase.removeSong = (roomId, song) => {
+  let firebaseRef = firebase.database().ref("rooms/" + roomId + "/songs");
+  firebaseRef
+    .orderByKey()
+    .once("value")
+    .then((snapshot) => {
+      // Grab the current value of what was written to the Realtime Database.
+      let found = false;
+      snapshot.forEach((child) => {
+        if (child.key === song.key) {
+          found = true;
+        } else if (found) {
+          let p = child.val().position + 1;
+          firebase
+            .database()
+            .ref("rooms/" + roomId + "/songs")
+            .child(child.key)
+            .child("position")
+            .set(p);
+        }
+      });
+
+      firebase
+        .database()
+        .ref("rooms/" + roomId + "/songs/" + song.key)
+        .remove();
+      firebase
+        .database()
+        .ref("rooms/" + roomId + "/currentPosition")
+        .once("value", function (snapshot) {
+          let pos = snapshot.val();
+          firebase
+            .database()
+            .ref("rooms/" + roomId + "/currentPosition")
+            .set(pos + 1);
+        });
+    });
+};
+
+firebase.createRoom = (user) => {
+  let roomKey = firebase.database().ref("rooms/").push().key;
+  firebase
+    .database()
+    .ref("rooms/" + roomKey + "/")
+    .set({
+      creator: props.user.nickname,
+    });
+  return roomKey;
+};
+
+firebase.join = (roomId, setInvalidId, setError) => {
+  firebase
+    .database()
+    .ref("rooms")
+    .once("value")
+    .then((res) => {
+      if (res.hasChild(roomId)) {
+        return;
+      } else {
+        setError(true);
+        setInvalidId(false);
+      }
+    })
+    .catch((err) => {
+      setInvalidId(true);
+    });
+};
+
 export default firebase;
