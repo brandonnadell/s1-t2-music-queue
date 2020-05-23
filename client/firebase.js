@@ -54,4 +54,36 @@ firebase.signOut = async () => {
   await firebase.auth().signOut();
 };
 
+firebase.createSong = (url, title, img, roomId, name) => {
+  let videoUrl = "https://www.youtube.com/watch?v=" + url;
+  firebase
+    .database()
+    .ref("rooms/" + roomId + "/currentPosition")
+    .once("value", function (snapshot) {
+      let pos = snapshot.val();
+      firebase
+        .database()
+        .ref("rooms/" + roomId + "/songs/")
+        .push()
+        .set({
+          title: title,
+          image: img,
+          videoUrl: videoUrl,
+          rating: 0,
+          position: pos,
+          votedUsers: [],
+          progress: 0,
+          addedBy: name,
+          playing: false,
+        })
+        .then(() => {
+          pos--;
+          firebase
+            .database()
+            .ref("rooms/" + roomId + "/currentPosition")
+            .set(pos);
+        });
+    });
+};
+
 export default firebase;
