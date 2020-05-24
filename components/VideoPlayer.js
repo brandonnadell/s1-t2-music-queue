@@ -122,7 +122,7 @@ export function VideoPlayer(props) {
         database.changePosition(song, roomId, -1);
       } else if (vote == -1) {
         database.downvoteToUpvote(roomId, song, props.user);
-        database.changePosition(song, roomdId, 2);
+        database.changePosition(song, roomId, 2);
       }
     } else {
       database.addUpvote(roomId, song, props.user);
