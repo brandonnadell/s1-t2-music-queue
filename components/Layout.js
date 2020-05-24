@@ -7,7 +7,7 @@ function Layout(props) {
 
   return (
     <>
-      <AppNavbar user={user} />
+      <AppNavbar user={user} database={props.database} />
       <Container>{props.children}</Container>
       <AppFooter />
     </>

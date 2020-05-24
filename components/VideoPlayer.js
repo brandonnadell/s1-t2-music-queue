@@ -13,7 +13,6 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import firebase from "../client/firebase";
 
 export function VideoPlayer(props) {
   let queue = props.queue;
@@ -25,6 +24,7 @@ export function VideoPlayer(props) {
   let data = {};
   let key = "";
   let creator = props.admin;
+  const database = props.database;
   if (list && list.length !== 0) {
     data = list.val;
     key = list.key;
@@ -56,23 +56,18 @@ export function VideoPlayer(props) {
   };
 
   function handleToggle() {
-    let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
     if (player.getSecondsLoaded() != null) {
       if (player.getInternalPlayer().getPlayerState() == 1) {
         player.getInternalPlayer().pauseVideo();
         setPlaying(false);
         if (creator === props.user.nickname) {
-          ref.update({
-            playing: false,
-          });
+          database.updatePlaying(roomId, key, false);
         }
       } else {
         player.getInternalPlayer().playVideo();
         setPlaying(true);
         if (creator === props.user.nickname) {
-          ref.update({
-            playing: true,
-          });
+          database.updatePlaying(roomId, key, true);
         }
       }
     }
@@ -81,21 +76,11 @@ export function VideoPlayer(props) {
   function handleStart() {
     setPlaying(true);
     setStarted(true);
-    let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
     if (props.user.nickname !== creator) {
-      if (ref) {
-        ref.once("value").then((snapshot) => {
-          if (snapshot && snapshot.toJSON()) {
-            let currProg = snapshot.toJSON().progress;
-            player.seekTo(Math.floor(currProg), false);
-          }
-        });
-      }
+      database.syncPlayer(roomId, key, player);
     } else {
       if (data.progress !== 0) player.seekTo(data.progress, false);
-      ref.update({
-        playing: true,
-      });
+      database.updatePlaying(roomId, key, true);
     }
   }
 
@@ -107,12 +92,7 @@ export function VideoPlayer(props) {
     let currentProg = (player.getCurrentTime() / player.getDuration()) * 100;
     if (props.user.nickname === creator) {
       if (Math.abs(currentProg - data.progress) > 1) {
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs/" + key)
-          .update({
-            progress: player.getCurrentTime(),
-          });
+        database.updateProgress(roomId, key, player);
       }
     }
     setProgress(setProgress(currentProg));
@@ -123,41 +103,12 @@ export function VideoPlayer(props) {
   }
 
   function handleEnded() {
-    if (creator == props.user.nickname)
-      firebase
-        .database()
-        .ref("rooms/" + roomId + "/songs/")
-        .child(key)
-        .remove();
+    if (creator == props.user.nickname) database.removePlaying(roomId, key);
     setStarted(false);
   }
 
   function initPlayer(player) {
     setPlayer(player);
-  }
-
-  function changePosition(song, change) {
-    firebase
-      .database()
-      .ref("rooms/" + roomId + "/songs")
-      .child(song.key)
-      .once("value")
-      .then(function (snapshot) {
-        let p = snapshot.child("position").val() + change;
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs")
-          .child(song.key)
-          .child("position")
-          .set(p);
-        let r = snapshot.child("rating").val() + change;
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs")
-          .child(song.key)
-          .child("rating")
-          .set(r);
-      });
   }
 
   function upvote(song) {
@@ -167,40 +118,15 @@ export function VideoPlayer(props) {
     ) {
       let vote = song.val.votedUsers[props.user.nickname].vote;
       if (vote == 1) {
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
-          .child(props.user.nickname)
-          .remove();
-        changePosition(song, -1);
+        database.removeUpvote(roomId, song, props.user);
+        database.changePosition(song, roomId, -1);
       } else if (vote == -1) {
-        firebase
-          .database()
-          .ref(
-            "rooms/" +
-              roomId +
-              "/songs/" +
-              song.key +
-              "/votedUsers/" +
-              props.user.nickname
-          )
-          .child("vote")
-          .set(1);
-        changePosition(song, 2);
+        database.downvoteToUpvote(roomId, song, props.user);
+        database.changePosition(song, roomId, 2);
       }
     } else {
-      firebase
-        .database()
-        .ref(
-          "rooms/" +
-            roomId +
-            "/songs/" +
-            song.key +
-            "/votedUsers/" +
-            props.user.nickname
-        )
-        .update({ vote: 1 });
-      changePosition(song, 1);
+      database.addUpvote(roomId, song, props.user);
+      database.changePosition(song, roomId, 1);
     }
   }
 
@@ -211,40 +137,15 @@ export function VideoPlayer(props) {
     ) {
       let vote = song.val.votedUsers[props.user.nickname].vote;
       if (vote == -1) {
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
-          .child(props.user.nickname)
-          .remove();
-        changePosition(song, 1);
+        database.removeDownvote(roomId, song, props.user);
+        database.changePosition(song, roomId, 1);
       } else if (vote == 1) {
-        firebase
-          .database()
-          .ref(
-            "rooms/" +
-              roomId +
-              "/songs/" +
-              song.key +
-              "/votedUsers/" +
-              props.user.nickname
-          )
-          .child("vote")
-          .set(-1);
-        changePosition(song, -2);
+        database.upvoteToDownvote(roomId, song, props.user);
+        database.changePosition(song, roomId, -2);
       }
     } else {
-      firebase
-        .database()
-        .ref(
-          "rooms/" +
-            roomId +
-            "/songs/" +
-            song.key +
-            "/votedUsers/" +
-            props.user.nickname
-        )
-        .update({ vote: -1 });
-      changePosition(song, -1);
+      database.addDownvote(roomId, song, props.user);
+      database.changePosition(song, roomId, -1);
     }
   }
 
@@ -255,46 +156,6 @@ export function VideoPlayer(props) {
       : 0;
   }
 
-  function removeSong(song) {
-    let firebaseRef = firebase
-      .database()
-      .ref("rooms/" + props.roomId + "/songs");
-    firebaseRef
-      .orderByKey()
-      .once("value")
-      .then((snapshot) => {
-        // Grab the current value of what was written to the Realtime Database.
-        let found = false;
-        snapshot.forEach((child) => {
-          if (child.key === song.key) {
-            found = true;
-          } else if (found) {
-            let p = child.val().position + 1;
-            firebase
-              .database()
-              .ref("rooms/" + roomId + "/songs")
-              .child(child.key)
-              .child("position")
-              .set(p);
-          }
-        });
-
-        firebase
-          .database()
-          .ref("rooms/" + props.roomId + "/songs/" + song.key)
-          .remove();
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/currentPosition")
-          .once("value", function (snapshot) {
-            let pos = snapshot.val();
-            firebase
-              .database()
-              .ref("rooms/" + roomId + "/currentPosition")
-              .set(pos + 1);
-          });
-      });
-  }
   // console.error("current progress")
   return (
     <div>
@@ -421,7 +282,9 @@ export function VideoPlayer(props) {
                             <center>
                               <Button
                                 variant="danger"
-                                onClick={() => removeSong(song)}
+                                onClick={() =>
+                                  database.removeSong(roomId, song)
+                                }
                               >
                                 Delete
                               </Button>

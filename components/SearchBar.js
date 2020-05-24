@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { fetchData } from "../utils/youtube_api";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
@@ -8,13 +7,13 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
-import firebase from "../client/firebase";
 
 var songs = [];
 var maxResults;
 var songId = 0;
 
 const SearchBar = (props) => {
+  const database = props.database;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCount, setSearchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -22,6 +21,7 @@ const SearchBar = (props) => {
   const [error, setError] = useState("");
   const [data, setData] = useState("");
   let roomId = props.roomId;
+  const fetchData = props.fetchData;
 
   useEffect(() => {
     if (searchTerm.length !== 0) {
@@ -104,7 +104,7 @@ const SearchBar = (props) => {
                           <Button
                             variant="outline-success"
                             onClick={() =>
-                              firebase.createSong(
+                              database.createSong(
                                 song.videoId,
                                 song.title,
                                 song.img,
