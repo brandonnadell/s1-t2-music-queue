@@ -9,7 +9,6 @@ export const getServerSideProps = optionalAuth;
 
 function HomePage(props) {
   const { user } = props;
-  console.log(user);
   return (
     <Layout user={user} database={firebase}>
       {user ? (

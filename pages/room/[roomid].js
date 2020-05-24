@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { requiredAuth } from "../../utils/ssr";
 import firebase from "../../client/firebase";
+import { fetchData } from "../../utils/youtube_api";
 
 export const getServerSideProps = requiredAuth;
 
@@ -120,7 +121,12 @@ const Room = (props) => {
       <p>Room: {roomid}</p>
       <div>
         <div>
-          <SearchBar roomId={roomid} user={user} database={firebase} />
+          <SearchBar
+            roomId={roomid}
+            user={user}
+            database={firebase}
+            fetchData={fetchData}
+          />
         </div>
         <div>
           {/* {console.log("song list object: ", list)} */}

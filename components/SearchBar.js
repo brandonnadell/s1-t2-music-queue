@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { fetchData } from "../utils/youtube_api";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
@@ -22,6 +21,7 @@ const SearchBar = (props) => {
   const [error, setError] = useState("");
   const [data, setData] = useState("");
   let roomId = props.roomId;
+  const fetchData = props.fetchData;
 
   useEffect(() => {
     if (searchTerm.length !== 0) {

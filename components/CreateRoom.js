@@ -3,7 +3,7 @@ import Router from "next/router";
 
 export default function CreateRoom(props) {
   async function redirect() {
-    const roomId = props.database.CreateRoom(props.user);
+    const roomId = props.database.createRoom(props.user);
     Router.push("/room/" + roomId);
   }
 

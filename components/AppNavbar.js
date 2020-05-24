@@ -40,7 +40,7 @@ function AppNavbar(props) {
               >
                 <NavDropdown.Item
                   className="text-danger"
-                  onClick={logOut(props.database)}
+                  onClick={() => logOut(props.database)}
                 >
                   Logout
                 </NavDropdown.Item>

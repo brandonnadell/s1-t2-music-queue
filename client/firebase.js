@@ -245,27 +245,13 @@ firebase.createRoom = (user) => {
     .database()
     .ref("rooms/" + roomKey + "/")
     .set({
-      creator: props.user.nickname,
+      creator: user.nickname,
     });
   return roomKey;
 };
 
-firebase.join = (roomId, setInvalidId, setError) => {
-  firebase
-    .database()
-    .ref("rooms")
-    .once("value")
-    .then((res) => {
-      if (res.hasChild(roomId)) {
-        return;
-      } else {
-        setError(true);
-        setInvalidId(false);
-      }
-    })
-    .catch((err) => {
-      setInvalidId(true);
-    });
+firebase.getRoom = (roomId, setInvalidId, setError) => {
+  return firebase.database().ref("rooms").once("value");
 };
 
 export default firebase;

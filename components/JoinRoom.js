@@ -10,10 +10,19 @@ const JoinRoom = (props) => {
   const [invalidId, setInvalidId] = useState(false);
 
   function join() {
-    props.database.join(roomId, setInvalidId, setError);
-    if (!error && !invalidId) {
-      Router.push("/room/" + roomId);
-    }
+    props.database
+      .getRoom()
+      .then((res) => {
+        if (res.hasChild(roomId)) {
+          Router.push("/room/" + roomId);
+        } else {
+          setError(true);
+          setInvalidId(false);
+        }
+      })
+      .catch((err) => {
+        setInvalidId(true);
+      });
   }
 
   return (
