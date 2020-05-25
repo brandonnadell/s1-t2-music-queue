@@ -1,5 +1,8 @@
 #DEPLOYMENT INSTRUCTIONS
 
+#Step 0: Fork this repo
+- Fork the project repo to your own personal GitHub account by clicking on the "Fork" button at the upper right hand of the repo's page on GitHub.  This creates a personal copy of the repo under your own GitHub account.  This is necessary because you can't deploy an app to Heroku unless you have admin access to the repo.
+
 #step 1: install node
 - if you type node --version on your local system and you see a version that is 10.* or higher you can skip this step  
 - if not refer to:  
@@ -78,14 +81,15 @@
   - note make sure the api key is surrounded by quotation marks  
   
 #Step 6: Deploying on local host
-- type ```npm run prod``` and the app should be deployed successfully on http://localhost:3000
+- run ```npm install```
+- run ```npm run prod``` and the app should be deployed successfully on http://localhost:3000
 
 
 #step 7: Start Deploying on Heroku  
 - login or create an account on https://heroku.com
 - install Heroku CLI on system
   - follow directions on https://devcenter.heroku.com/articles/heroku-cli
-- go back to dashboard and create a new app on HEROKU and name it
+- go back to dashboard and create a new app on HEROKU and name it(will be referenced ass my-app-name)
 - log in to heroku on the command line by typing
 ``` 
 heroku login -i
@@ -93,7 +97,7 @@ heroku login -i
 - after logging in run npm install
 - run the following command:
 ```
-npx heroku-dotenv push --app cs48-s20-cgaucho-lab00
+npx heroku-dotenv push --app my-app-name
 ```
 - go to deploy tab on dashboard
 - connect github repo to the Heroku app and click deploy to the master branch
