@@ -46,3 +46,54 @@
 - under "Get started by adding Firebase to your app" press the icon </> (next to android) which corresponds to a web app
 - add an app nickname
 - 
+#step 5: Setting Up the Youtube API  
+
+#step 6: Start Deploying on Heroku  
+- login or create an account on https://heroku.com
+- install Heroku CLI on system
+  - follow directions on https://devcenter.heroku.com/articles/heroku-cli
+- go back to dashboard and create a new app on HEROKU and name it
+- add a value for SESSION_COOKIE_SECRET to the .env file
+  - this can be any arbitrary string of upper and lower case letters and numbers
+- log in to heroku on the command line by typing
+``` 
+heroku login -i
+```
+- after logging in run npm install
+- run the following command:
+```
+npx heroku-dotenv push --app cs48-s20-cgaucho-lab00
+```
+- go to deploy tab on dashboard
+- connect github repo to the Heroku app and click deploy to the master branch
+
+#step 7: adding heroku to auth0
+- login at  https://auth0.com/ 
+- click on Applciation on sidebar
+- select the application that was made earlier
+- go to the settings tab
+- your proudction url will be of the form 
+``` 
+https://my-app-name.herokuapp.com
+```
+- wherever you see localhost:3000, you want to put a comma and add the same exact string, except replacing ```http://localhost:3000``` with ```https://my-app-name.herokuapp.com``` 
+- for example, it goes from:  
+Allowed Callback URLs:  
+```http://localhost:3000/api/callback```  
+to this:  
+Allowed Callback URLs:  
+```http://localhost:3000/api/callback, https://my-app-name.herokuapp.com/api/callback```  
+
+#step 8: finish deploying on Heroku
+- go back to the settings page on the heroku dashboard
+- add two config variables
+- Find "Application URIs" and entter the following:
+   | Key                      | Value                                     |
+   | ------------------------ | ----------------------------------------- |
+   | REDIRECT_URI             | proudction URL with /api/callback appended|
+   | POST_LOGOUT_REDIRECT_URI | Your production URL                       |
+  
+
+
+
+
