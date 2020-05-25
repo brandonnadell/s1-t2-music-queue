@@ -36,6 +36,10 @@
 - copy the values of "Domain", "Client Id", and "Client Secret" into .env file
 
 #step 4: Setting up Firebase
+- create firebase.js from firebase.js.SAMPLE in /client by typing  
+  ```
+   cp /client/firebase.js.SAMPLE /client/firebase.js  
+   ```
 - go to https://console.firebase.google.com and sign up for a firebase account
   - just log in if you already have one
 - on the dashboard click on add project
@@ -45,11 +49,22 @@
 - press continue when project is ready
 - under "Get started by adding Firebase to your app" press the icon </> (next to android) which corresponds to a web app
 - add an app nickname
-- 
+- click continue
+- now press "Database" in the sidebar and then press "Create Database"
+  - press "start in production mode"
+  - choose where you want your server to be located and press "Done"
+- now press "Cloud Firestore" on the right of "Database" and click on "Realtime Database" in the drop down menu  
+- click on the "Rules" tab
+- change `false` to `true` for the keys `.read` and `.write`
+  - these should only be two key-value pairs
+- Now click the gear wheel next to "Project Overview" and press "Project Settings" in the drop down  
+- Scroll down untill you see a section called "Firebase SDK snippet"  
+- copy the respective values to the keys in /client/firebase.js  
+
 #step 5: Setting Up the Youtube API  
 - create youtube_api.js from youtube_api.js.SAMPLE in /utils by typing  
   ```
-   cp /utils/youtube_api.js.SAMPLE /utils/.yotube_api.js  
+   cp /utils/youtube_api.js.SAMPLE /utils/yotube_api.js  
    ```
    - we will now get the youtube api key to fill into youtube_api.js
 - navigate to https://console.developers.google.com/ and login or create an account
@@ -59,10 +74,14 @@
 - click "Create Credentials" button and select "API KEY" from the menu
 - copy this API KEY onto your clipboard
 - navigate to /utils/youtube_api.js and delete "enter api key here"
-- paste API Key where "enter api key here" was
-  - note make sure the api key is surrounded by quotation marks
+- paste API Key where "enter api key here" was  
+  - note make sure the api key is surrounded by quotation marks  
+  
+#Step 6: Deploying on local host
+- type ```npm run prod``` and the app should be deployed successfully on http://localhost:3000
 
-#step 6: Start Deploying on Heroku  
+
+#step 7: Start Deploying on Heroku  
 - login or create an account on https://heroku.com
 - install Heroku CLI on system
   - follow directions on https://devcenter.heroku.com/articles/heroku-cli
@@ -79,7 +98,7 @@ npx heroku-dotenv push --app cs48-s20-cgaucho-lab00
 - go to deploy tab on dashboard
 - connect github repo to the Heroku app and click deploy to the master branch
 
-#step 7: adding heroku to auth0
+#step 8: adding heroku to auth0
 - login at  https://auth0.com/ 
 - click on Applciation on sidebar
 - select the application that was made earlier
@@ -96,7 +115,7 @@ to this:
 Allowed Callback URLs:  
 ```http://localhost:3000/api/callback, https://my-app-name.herokuapp.com/api/callback```  
 
-#step 8: finish deploying on Heroku
+#step 9: finish deploying on Heroku
 - go back to the settings page on the heroku dashboard
 - add two config variables
 - Find "Application URIs" and entter the following:
