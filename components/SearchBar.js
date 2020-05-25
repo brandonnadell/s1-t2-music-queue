@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import API_KEY from "../utils/youtube_api";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
@@ -8,13 +7,13 @@ import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
-import firebase from "../utils/firebase";
 
 var songs = [];
 var maxResults;
 var songId = 0;
 
 const SearchBar = (props) => {
+  const database = props.database;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchCount, setSearchCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -22,72 +21,22 @@ const SearchBar = (props) => {
   const [error, setError] = useState("");
   const [data, setData] = useState("");
   let roomId = props.roomId;
-
-  async function fetchData() {
-    setLoading(true);
-    maxResults = 3;
-    const url =
-      "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&order=relevance&q=" +
-      searchTerm +
-      "&type=video&videoCategoryId=10&key=" +
-      API_KEY;
-    const res = await fetch(url);
-    res
-      .json()
-      .then((res) => {
-        setData(res);
-      })
-      .then((res) => {
-        setLoading(false);
-      });
-    // .catch((err) => setError(err));
-    // .catch((err) => console.error(err));
-  }
+  const fetchData = props.fetchData;
 
   useEffect(() => {
     if (searchTerm.length !== 0) {
-      fetchData();
+      setLoading(true);
+      maxResults = 3;
+      fetchData(searchTerm).then((res) => {
+        setData(res);
+        setLoading(false);
+      });
     }
   }, [searchCount]);
 
   function displayAllResults(param) {
     setMoreResultsCount(moreResultsCount + 1);
     maxResults = param;
-  }
-
-  function sendUrl(url, title, img) {
-    let videoUrl = "https://www.youtube.com/watch?v=" + url;
-    firebase
-      .database()
-      .ref("rooms/" + roomId + "/currentPosition")
-      .once("value", function (snapshot) {
-        let pos = snapshot.val();
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs/")
-          .push()
-          .set({
-            title: title,
-            image: img,
-            videoUrl: videoUrl,
-            rating: 0,
-            position: pos,
-            votedUsers: [],
-            progress: 0,
-            addedBy: props.user.nickname,
-          })
-          .then(() => {
-            pos--;
-            firebase
-              .database()
-              .ref("rooms/" + roomId + "/currentPosition")
-              .set(pos);
-            console.log("Succesfully wrote to db. CurrPos = " + pos);
-          });
-        // console.log(pos);
-        // pos++;
-        // console.log(pos);
-      });
   }
 
   if (searchTerm.length !== 0) {
@@ -155,7 +104,13 @@ const SearchBar = (props) => {
                           <Button
                             variant="outline-success"
                             onClick={() =>
-                              sendUrl(song.videoId, song.title, song.img)
+                              database.createSong(
+                                song.videoId,
+                                song.title,
+                                song.img,
+                                roomId,
+                                props.user.nickname
+                              )
                             }
                           >
                             Queue

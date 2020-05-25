@@ -8,6 +8,7 @@
 *.swo
 *.swp
 
+firebase-key.json
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
@@ -30,6 +31,7 @@
 .DS_Store
 .env
 .env.build
+utils/youtube_api.js
 
 # debug
 npm-debug.log*

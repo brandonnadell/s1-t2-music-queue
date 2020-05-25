@@ -7,6 +7,11 @@ import Button from "react-bootstrap/Button";
 import Image from "react-bootstrap/Image";
 import { loadGetInitialProps } from "next/dist/next-server/lib/utils";
 
+async function logOut(database) {
+  if (window) window.location.href = "/api/logout";
+  database.signOut();
+}
+
 function AppNavbar(props) {
   const user = props.user;
 
@@ -33,7 +38,10 @@ function AppNavbar(props) {
                   </>
                 }
               >
-                <NavDropdown.Item className="text-danger" href="/api/logout">
+                <NavDropdown.Item
+                  className="text-danger"
+                  onClick={() => logOut(props.database)}
+                >
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>

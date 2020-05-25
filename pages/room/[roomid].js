@@ -6,7 +6,8 @@ import VideoPlayer from "../../components/VideoPlayer";
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
 import { requiredAuth } from "../../utils/ssr";
-import firebase from "../../utils/firebase";
+import firebase from "../../client/firebase";
+import { fetchData } from "../../utils/youtube_api";
 
 export const getServerSideProps = requiredAuth;
 
@@ -76,7 +77,7 @@ const Room = (props) => {
             .child("position")
             .set(Number.MAX_VALUE);
         setList(tempList.reverse());
-      });  
+      });
 
       window.addEventListener("beforeunload", function (event) {
         roomRef.child("users/" + userid).remove();
@@ -113,7 +114,6 @@ const Room = (props) => {
     } catch (err) {
       router.push("/");
     }
-
   }, []);
 
   return (
@@ -121,7 +121,12 @@ const Room = (props) => {
       <p>Room: {roomid}</p>
       <div>
         <div>
-          <SearchBar roomId={roomid} user={user} />
+          <SearchBar
+            roomId={roomid}
+            user={user}
+            database={firebase}
+            fetchData={fetchData}
+          />
         </div>
         <div>
           {/* {console.log("song list object: ", list)} */}
@@ -131,6 +136,7 @@ const Room = (props) => {
             roomId={roomid}
             user={user}
             admin={admin}
+            database={firebase}
           />
         </div>
       </div>

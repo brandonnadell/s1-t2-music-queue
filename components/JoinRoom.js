@@ -1,22 +1,18 @@
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Router from "next/router";
-import firebase from "../utils/firebase";
 import FormControl from "react-bootstrap/FormControl";
 import React, { useState, useEffect } from "react";
 
-const JoinRoom = () => {
+const JoinRoom = (props) => {
   const [roomId, setRoomId] = useState("");
   const [error, setError] = useState(false);
   const [invalidId, setInvalidId] = useState(false);
 
   function join() {
-    firebase
-      .database()
-      .ref("rooms")
-      .once("value")
+    props.database
+      .getRoom()
       .then((res) => {
-        console.log({ roomId });
         if (res.hasChild(roomId)) {
           Router.push("/room/" + roomId);
         } else {

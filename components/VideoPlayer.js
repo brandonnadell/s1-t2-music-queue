@@ -13,7 +13,6 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import firebase from "../utils/firebase";
 
 export function VideoPlayer(props) {
   let queue = props.queue;
@@ -25,6 +24,7 @@ export function VideoPlayer(props) {
   let data = {};
   let key = "";
   let creator = props.admin;
+  const database = props.database;
   if (list && list.length !== 0) {
     data = list.val;
     key = list.key;
@@ -34,16 +34,19 @@ export function VideoPlayer(props) {
   }
   let muted = props.muted;
   const [player, setPlayer] = useState("");
-  const [playing, setPlaying] = useState("");
+  const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState("");
   const [started, setStarted] = useState("");
 
-  /*  useEffect(() => {
-    let roomRef = firebase.database().ref("rooms/").child(roomId);
-    roomRef.once("value").then((snapshot) => {
-      creator = snapshot.val().creator
-    });
-  }, []); */
+  useEffect(() => {
+    if (
+      creator !== props.user.nickname &&
+      data &&
+      data.playing !== playing &&
+      player
+    )
+      handleToggle();
+  });
 
   const divStyle = {
     display: "flex",
@@ -57,9 +60,15 @@ export function VideoPlayer(props) {
       if (player.getInternalPlayer().getPlayerState() == 1) {
         player.getInternalPlayer().pauseVideo();
         setPlaying(false);
+        if (creator === props.user.nickname) {
+          database.updatePlaying(roomId, key, false);
+        }
       } else {
         player.getInternalPlayer().playVideo();
         setPlaying(true);
+        if (creator === props.user.nickname) {
+          database.updatePlaying(roomId, key, true);
+        }
       }
     }
   }
@@ -68,20 +77,14 @@ export function VideoPlayer(props) {
     setPlaying(true);
     setStarted(true);
     if (props.user.nickname !== creator) {
-      let ref = firebase.database().ref("rooms/" + roomId + "/songs/" + key);
-      if (ref) {
-        ref.once("value").then((snapshot) => {
-          if (snapshot && snapshot.toJSON()) {
-            let currProg = snapshot.toJSON().progress;
-            player.seekTo(Math.floor(currProg), false);
-          }
-        });
-      }
-    } else if (data.progress !== 0) player.seekTo(data.progress, false);
+      database.syncPlayer(roomId, key, player);
+    } else {
+      if (data.progress !== 0) player.seekTo(data.progress, false);
+      database.updatePlaying(roomId, key, true);
+    }
   }
 
   function handleReady() {
-    console.log("---ready");
     setStarted(false);
   }
 
@@ -89,12 +92,7 @@ export function VideoPlayer(props) {
     let currentProg = (player.getCurrentTime() / player.getDuration()) * 100;
     if (props.user.nickname === creator) {
       if (Math.abs(currentProg - data.progress) > 1) {
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs/" + key)
-          .update({
-            progress: player.getCurrentTime(),
-          });
+        database.updateProgress(roomId, key, player);
       }
     }
     setProgress(setProgress(currentProg));
@@ -105,41 +103,12 @@ export function VideoPlayer(props) {
   }
 
   function handleEnded() {
-    if (creator == props.user.nickname)
-      firebase
-        .database()
-        .ref("rooms/" + roomId + "/songs/")
-        .child(key)
-        .remove();
+    if (creator == props.user.nickname) database.removePlaying(roomId, key);
     setStarted(false);
   }
 
   function initPlayer(player) {
     setPlayer(player);
-  }
-
-  function changePosition(song, change) {
-    firebase
-      .database()
-      .ref("rooms/" + roomId + "/songs")
-      .child(song.key)
-      .once("value")
-      .then(function (snapshot) {
-        let p = snapshot.child("position").val() + change;
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs")
-          .child(song.key)
-          .child("position")
-          .set(p);
-        let r = snapshot.child("rating").val() + change;
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs")
-          .child(song.key)
-          .child("rating")
-          .set(r);
-      });
   }
 
   function upvote(song) {
@@ -149,40 +118,15 @@ export function VideoPlayer(props) {
     ) {
       let vote = song.val.votedUsers[props.user.nickname].vote;
       if (vote == 1) {
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
-          .child(props.user.nickname)
-          .remove();
-        changePosition(song, -1);
+        database.removeUpvote(roomId, song, props.user);
+        database.changePosition(song, roomId, -1);
       } else if (vote == -1) {
-        firebase
-          .database()
-          .ref(
-            "rooms/" +
-              roomId +
-              "/songs/" +
-              song.key +
-              "/votedUsers/" +
-              props.user.nickname
-          )
-          .child("vote")
-          .set(1);
-        changePosition(song, 2);
+        database.downvoteToUpvote(roomId, song, props.user);
+        database.changePosition(song, roomId, 2);
       }
     } else {
-      firebase
-        .database()
-        .ref(
-          "rooms/" +
-            roomId +
-            "/songs/" +
-            song.key +
-            "/votedUsers/" +
-            props.user.nickname
-        )
-        .update({ vote: 1 });
-      changePosition(song, 1);
+      database.addUpvote(roomId, song, props.user);
+      database.changePosition(song, roomId, 1);
     }
   }
 
@@ -193,40 +137,15 @@ export function VideoPlayer(props) {
     ) {
       let vote = song.val.votedUsers[props.user.nickname].vote;
       if (vote == -1) {
-        firebase
-          .database()
-          .ref("rooms/" + roomId + "/songs/" + song.key + "/votedUsers/")
-          .child(props.user.nickname)
-          .remove();
-        changePosition(song, 1);
+        database.removeDownvote(roomId, song, props.user);
+        database.changePosition(song, roomId, 1);
       } else if (vote == 1) {
-        firebase
-          .database()
-          .ref(
-            "rooms/" +
-              roomId +
-              "/songs/" +
-              song.key +
-              "/votedUsers/" +
-              props.user.nickname
-          )
-          .child("vote")
-          .set(-1);
-        changePosition(song, -2);
+        database.upvoteToDownvote(roomId, song, props.user);
+        database.changePosition(song, roomId, -2);
       }
     } else {
-      firebase
-        .database()
-        .ref(
-          "rooms/" +
-            roomId +
-            "/songs/" +
-            song.key +
-            "/votedUsers/" +
-            props.user.nickname
-        )
-        .update({ vote: -1 });
-      changePosition(song, -1);
+      database.addDownvote(roomId, song, props.user);
+      database.changePosition(song, roomId, -1);
     }
   }
 
@@ -237,6 +156,7 @@ export function VideoPlayer(props) {
       : 0;
   }
 
+  // console.error("current progress")
   return (
     <div>
       {props.list && props.list.length !== 0 ? (
@@ -264,7 +184,7 @@ export function VideoPlayer(props) {
                               variant="outline-primary"
                               onClick={handleSkipToEnd}
                             >
-                              Skip to End
+                              Skip
                             </Button>
                           </ButtonGroup>
                         </div>
@@ -298,11 +218,15 @@ export function VideoPlayer(props) {
                     }}
                   >
                     <tr>
-                      <th></th>
-                      <th>Song</th>
-                      <th>Rating</th>
-                      <th>Vote</th>
-                      <th>Added By</th>
+                      <th style={{ width: "9%" }}></th>
+                      <th style={{ width: "46%" }}>Song</th>
+                      <th style={{ width: "10%" }}>
+                        <center>Rating</center>
+                      </th>
+                      <th style={{ width: "15%" }}>
+                        <center>Vote</center>
+                      </th>
+                      <th style={{ width: "20%" }}>Added By</th>
                     </tr>
                   </thead>
                   <tbody
@@ -314,46 +238,60 @@ export function VideoPlayer(props) {
                   >
                     {props.list.slice(1, props.list.length).map((song, ind) => (
                       <tr
+                        key={song.title}
                         style={{
                           display: "table",
                           width: "100%",
-                          "table-layout": "fixed",
+                          tableLayout: "fixed",
                         }}
                       >
-                        <td>{ind + 1}</td>
-                        <td>{song.val.title}</td>
-                        <td>{song.val.rating}</td>
-                        <td>
+                        <td style={{ width: "9%" }}>{ind + 1}</td>
+                        <td style={{ width: "46%" }}>{song.val.title}</td>
+                        <td style={{ width: "10%" }}>
+                          <center>{song.val.rating}</center>
+                        </td>
+                        <td style={{ width: "15%" }}>
                           {song.val.addedBy !== props.user.nickname ? (
                             <div>
-                              <Button
-                                variant={
-                                  getVote(song) == 1
-                                    ? "primary"
-                                    : "outline-primary"
-                                }
-                                size="sm"
-                                onClick={() => upvote(song)}
-                              >
-                                <CaretUpFill />
-                              </Button>
-                              <Button
-                                variant={
-                                  getVote(song) == -1
-                                    ? "danger"
-                                    : "outline-danger"
-                                }
-                                size="sm"
-                                onClick={() => downvote(song)}
-                              >
-                                <CaretDownFill />
-                              </Button>
+                              <center>
+                                <Button
+                                  variant={
+                                    getVote(song) == 1
+                                      ? "primary"
+                                      : "outline-primary"
+                                  }
+                                  size="sm"
+                                  onClick={() => upvote(song)}
+                                >
+                                  <CaretUpFill />
+                                </Button>
+                                <Button
+                                  variant={
+                                    getVote(song) == -1
+                                      ? "danger"
+                                      : "outline-danger"
+                                  }
+                                  size="sm"
+                                  onClick={() => downvote(song)}
+                                >
+                                  <CaretDownFill />
+                                </Button>
+                              </center>
                             </div>
                           ) : (
-                            <Button variant="danger">Delete</Button>
+                            <center>
+                              <Button
+                                variant="danger"
+                                onClick={() =>
+                                  database.removeSong(roomId, song)
+                                }
+                              >
+                                Delete
+                              </Button>
+                            </center>
                           )}
                         </td>
-                        <td>{song.val.addedBy}</td>
+                        <td style={{ width: "20%" }}>{song.val.addedBy}</td>
                       </tr>
                     ))}
                   </tbody>

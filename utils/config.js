@@ -16,6 +16,9 @@ if (typeof window === "undefined") {
     SESSION_COOKIE_LIFETIME: process.env.SESSION_COOKIE_LIFETIME,
     MONGODB_URI: process.env.MONGODB_URI,
     FIREBASE_ENV: process.env.FIREBASE_ENV,
+    FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+    FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
+    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
   };
 } else {
   /**
