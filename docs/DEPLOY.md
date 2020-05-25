@@ -47,6 +47,20 @@
 - add an app nickname
 - 
 #step 5: Setting Up the Youtube API  
+- create youtube_api.js from youtube_api.js.SAMPLE in /utils by typing  
+  ```
+   cp /utils/youtube_api.js.SAMPLE .yotube_api.js  
+   ```
+   - we will now get the youtube api key to fill into youtube_api.js
+- navigate to https://console.developers.google.com/ and login or create an account
+- create a new project and name it
+- go to the search bar and search for the `YouTube Data API v3` API  
+- click credentials on the sidebar  
+- click "Create Credentials" button and select "API KEY" from the menu
+- copy this API KEY onto your clipboard
+- navigate to /utils/youtube_api.js and delete "enter api key here"
+- paste API Key where "enter api key here" was
+  - note make sure the api key is surrounded by quotation marks
 
 #step 6: Start Deploying on Heroku  
 - login or create an account on https://heroku.com
