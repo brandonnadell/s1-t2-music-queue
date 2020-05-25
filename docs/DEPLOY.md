@@ -1,9 +1,9 @@
-#DEPLOYMENT INSTRUCTIONS
+# DEPLOYMENT INSTRUCTIONS
 
-#Step 0: Fork this repo
+## Step 0: Fork this repo
 - Fork the project repo to your own personal GitHub account by clicking on the "Fork" button at the upper right hand of the repo's page on GitHub.  This creates a personal copy of the repo under your own GitHub account.  This is necessary because you can't deploy an app to Heroku unless you have admin access to the repo.
 
-#step 1: install node
+## step 1: install node
 - if you type node --version on your local system and you see a version that is 10.* or higher you can skip this step  
 - if not refer to:  
   - MacOS: https://ucsb-cs48.github.io/jstopics/node_macos/  
@@ -14,11 +14,11 @@
   - type npm --version and get a version number (as opposed to command not found)
   - type npx --version and get a version number (as opposed to command not found)
   
-#step 2: npm install  
+## step 2: npm install  
 - make sure you are in the files main directory and type npm install  
 - make sure to fix all dependency issues 
 
-#step 3: Setting up OAuth  
+## step 3: Setting up OAuth  
 - create .env from .env.SAMPLE by typing the following:  
    ```
    cp .env.SAMPLE .env  
@@ -38,7 +38,7 @@
 - scroll up and look under "Basic Information"
 - copy the values of "Domain", "Client Id", and "Client Secret" into .env file
 
-#step 4: Setting up Firebase
+## step 4: Setting up Firebase
 - create firebase.js from firebase.js.SAMPLE in /client by typing  
   ```
    cp /client/firebase.js.SAMPLE /client/firebase.js  
@@ -64,7 +64,7 @@
 - Scroll down untill you see a section called "Firebase SDK snippet"  
 - copy the respective values to the keys in /client/firebase.js  
 
-#step 5: Setting Up the Youtube API  
+## step 5: Setting Up the Youtube API  
 - create youtube_api.js from youtube_api.js.SAMPLE in /utils by typing  
   ```
    cp /utils/youtube_api.js.SAMPLE /utils/yotube_api.js  
@@ -80,12 +80,12 @@
 - paste API Key where "enter api key here" was  
   - note make sure the api key is surrounded by quotation marks  
   
-#Step 6: Deploying on local host
+## Step 6: Deploying on local host
 - run ```npm install```
 - run ```npm run prod``` and the app should be deployed successfully on http://localhost:3000
 
 
-#step 7: Start Deploying on Heroku  
+## step 7: Start Deploying on Heroku  
 - login or create an account on https://heroku.com
 - install Heroku CLI on system
   - follow directions on https://devcenter.heroku.com/articles/heroku-cli
@@ -102,7 +102,7 @@ npx heroku-dotenv push --app my-app-name
 - go to deploy tab on dashboard
 - connect github repo to the Heroku app and click deploy to the master branch
 
-#step 8: adding heroku to auth0
+## step 8: adding heroku to auth0
 - login at  https://auth0.com/ 
 - click on Applciation on sidebar
 - select the application that was made earlier
@@ -119,7 +119,7 @@ to this:
 Allowed Callback URLs:  
 ```http://localhost:3000/api/callback, https://my-app-name.herokuapp.com/api/callback```  
 
-#step 9: finish deploying on Heroku
+## step 9: finish deploying on Heroku
 - go back to the settings page on the heroku dashboard
 - add two config variables
 - Find "Application URIs" and entter the following:
