@@ -63,6 +63,16 @@
 - Now click the gear wheel next to "Project Overview" and press "Project Settings" in the drop down  
 - Scroll down untill you see a section called "Firebase SDK snippet"  
 - copy the respective values to the keys in /client/firebase.js  
+- now create `firebase-key.json` from `firebase-key.json.SAMPLE` by running:
+```
+cp firebase-key.json.SAMPLE firebase-key.json 
+```
+- navigate back to the settings tab (gear wheel next to "Project Overview") and press "Project Settings" in the drop down
+- in the top menu bar select "Service Accounts" and scroll down and click on the button that says "Generate New Private Key"
+- type the respective values to the keys in `firebase-key.json`
+  - note: make sure they are surrounded by quotes in this case
+- now navigate to `.env`
+- type the respect values for the keys `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PROJECT_ID` from `firebase-key.json` into `.env`
 
 ## step 5: Setting Up the Youtube API  
 - create youtube_api.js from youtube_api.js.SAMPLE in /utils by typing  
