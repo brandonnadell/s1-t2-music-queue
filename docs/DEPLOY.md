@@ -49,7 +49,7 @@
 #step 5: Setting Up the Youtube API  
 - create youtube_api.js from youtube_api.js.SAMPLE in /utils by typing  
   ```
-   cp /utils/youtube_api.js.SAMPLE .yotube_api.js  
+   cp /utils/youtube_api.js.SAMPLE /utils/.yotube_api.js  
    ```
    - we will now get the youtube api key to fill into youtube_api.js
 - navigate to https://console.developers.google.com/ and login or create an account
@@ -67,8 +67,6 @@
 - install Heroku CLI on system
   - follow directions on https://devcenter.heroku.com/articles/heroku-cli
 - go back to dashboard and create a new app on HEROKU and name it
-- add a value for SESSION_COOKIE_SECRET to the .env file
-  - this can be any arbitrary string of upper and lower case letters and numbers
 - log in to heroku on the command line by typing
 ``` 
 heroku login -i
