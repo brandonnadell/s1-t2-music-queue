@@ -32,6 +32,7 @@ firebase-key.json
 .env
 .env.build
 utils/youtube_api.js
+client/firebase.js
 
 # debug
 npm-debug.log*
