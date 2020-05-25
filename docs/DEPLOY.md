@@ -17,7 +17,9 @@
 
 #step 3: Setting up OAuth  
 - create .env from .env.SAMPLE by typing the following:  
-  - cp .env.SAMPLE .env  
+   ```
+   cp .env.SAMPLE .env  
+   ```
 - create an account with auth0 (https://auth0.com/signup) 
   - if you already have an account sign in  
 - navigate to the APPLICATIONS page in the sidebar and click the "Create Application" button  
