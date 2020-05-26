@@ -18,13 +18,13 @@
 - make sure you are in the files main directory and type npm install  
 - make sure to fix all dependency issues 
 
-## step 3: Setting up OAuth  
+## step 3: Setting up Auth0  
 - create .env from .env.SAMPLE by typing the following:  
    ```
    cp .env.SAMPLE .env  
    ```
 - create an account with auth0 (https://auth0.com/signup) 
-  - if you already have an account sign in  
+  - if you already have an account sign in at https://manage.auth0.com/
 - navigate to the APPLICATIONS page in the sidebar and click the "Create Application" button  
 - name the application  
 - in the application that was just created click on the settings tab  
@@ -41,7 +41,7 @@
 ## step 4: Setting up Firebase
 - create firebase.js from firebase.js.SAMPLE in /client by typing  
   ```
-   cp /client/firebase.js.SAMPLE /client/firebase.js  
+   cp client/firebase.js.SAMPLE client/firebase.js  
    ```
 - go to https://console.firebase.google.com and sign up for a firebase account
   - just log in if you already have one
@@ -84,7 +84,7 @@
 ## step 5: Setting Up the Youtube API  
 - create youtube_api.js from youtube_api.js.SAMPLE in /utils by typing  
   ```
-   cp /utils/youtube_api.js.SAMPLE /utils/yotube_api.js  
+   cp utils/youtube_api.js.SAMPLE utils/yotube_api.js  
    ```
    - we will now get the youtube api key to fill into youtube_api.js
 - navigate to https://console.developers.google.com/ and login or create an account
