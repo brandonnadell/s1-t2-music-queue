@@ -106,7 +106,7 @@
 - login or create an account on https://heroku.com
 - install Heroku CLI on system
   - follow directions on https://devcenter.heroku.com/articles/heroku-cli
-- go back to dashboard and create a new app on HEROKU and name it(will be referenced ass my-app-name)
+- go back to dashboard and create a new app on HEROKU and name it(will be referenced as my-app-name)
 - log in to heroku on the command line by typing
 ``` 
 heroku login -i
