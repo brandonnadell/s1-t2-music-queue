@@ -63,8 +63,6 @@
   ```
   {
   "rules": {
-    // ".write": if get(/databases/(database)/documents/users/$(request.auth.uid))) != null;
-    // ".read": if request.auth.uid != null;
     ".read": "auth.uid != null",
     ".write": "auth.uid != null;"
     }
