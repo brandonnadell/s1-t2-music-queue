@@ -1,6 +1,7 @@
 # project-s1-t2-music-queue
 
 **Music Queue**
+- [Deployment Instructions](./docs/DEPLOY.md)
 
 A shared group music queue with embedded Youtube player
 
