@@ -16,7 +16,6 @@
   
 ## step 2: npm install  
 - make sure you are in the files main directory and type npm install  
-- make sure to fix all dependency issues 
 
 ## step 3: Setting up Auth0  
 - create .env from .env.SAMPLE by typing the following:  
