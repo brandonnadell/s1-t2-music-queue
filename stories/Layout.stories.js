@@ -13,6 +13,7 @@ export const loggedOut = () => {
 };
 
 export const loggedInWithChildren = () => {
+  const content = text("Content", "Sample Content");
   const name = text("Name", "Yuval Steinhart");
   const nickname = text("Nickname", "yuval");
   const picture = text(
@@ -20,5 +21,5 @@ export const loggedInWithChildren = () => {
     "https://avatars3.githubusercontent.com/ySteinhart1"
   );
   const user = { name, nickname, picture };
-  return <Layout user={user} database={database} children={"Sample content"} />;
+  return <Layout user={user} database={database} children={content} />;
 };
