@@ -10,9 +10,9 @@
   - Windows: https://ucsb-cs48.github.io/jstopics/node_windows/  
   - Linux: https://ucsb-cs48.github.io/jstopics/node_linux/  
 - when finished you should be able to type the following into the terminal and get the following responses:
-  - type node --version and get a number that is 10.* or higher (e.g. v10.16.3)
-  - type npm --version and get a version number (as opposed to command not found)
-  - type npx --version and get a version number (as opposed to command not found)
+  - type `node --version` and get a number that is 10.* or higher (e.g. v10.16.3)
+  - type `npm --version` and get a version number (as opposed to command not found)
+  - type `npx --version` and get a version number (as opposed to command not found)
   
 ## step 2: npm install  
 - make sure you are in the files main directory and type npm install  
@@ -58,21 +58,30 @@
   - choose where you want your server to be located and press "Done"
 - now press "Cloud Firestore" on the right of "Database" and click on "Realtime Database" in the drop down menu  
 - click on the "Rules" tab
-- change `false` to `true` for the keys `.read` and `.write`
-  - these should only be two key-value pairs
+- change the values from `false` to `auth.uid != NULL`
+  - should end up looking like  
+  ```
+  {
+  "rules": {
+    // ".write": if get(/databases/(database)/documents/users/$(request.auth.uid))) != null;
+    // ".read": if request.auth.uid != null;
+    ".read": "auth.uid != null",
+    ".write": "auth.uid != null;"
+    }
+   }
+  ```
+  
+  
 - Now click the gear wheel next to "Project Overview" and press "Project Settings" in the drop down  
 - Scroll down untill you see a section called "Firebase SDK snippet"  
 - copy the respective values to the keys in /client/firebase.js  
-- now create `firebase-key.json` from `firebase-key.json.SAMPLE` by running:
-```
-cp firebase-key.json.SAMPLE firebase-key.json 
-```
 - navigate back to the settings tab (gear wheel next to "Project Overview") and press "Project Settings" in the drop down
 - in the top menu bar select "Service Accounts" and scroll down and click on the button that says "Generate New Private Key"
-- type the respective values to the keys in `firebase-key.json`
+  - this will download a file with keys and values
+- navigate to `.env`
+- type the respect values for the keys `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PROJECT_ID` from the downloaded file into `.env`
   - note: make sure they are surrounded by quotes in this case
-- now navigate to `.env`
-- type the respect values for the keys `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PROJECT_ID` from `firebase-key.json` into `.env`
+
 
 ## step 5: Setting Up the Youtube API  
 - create youtube_api.js from youtube_api.js.SAMPLE in /utils by typing  
