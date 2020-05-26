@@ -15,6 +15,18 @@ A shared group music queue with embedded Youtube player
 
 Next.js
 
+| Command                   | Description                                           |
+| ------------------------- | ----------------------------------------------------- |
+| `npm install`             | Install Dependencies                                  |
+| `npm run dev`             | Runs locally in development mode                      |
+| `npm run start`           | Runs in production mode (requires `PORT` env var)     |
+| `npm run test`            | Runs entire test suite                                |
+| `npm run test:cypress`    | Runs Cypress integration tests                        |
+| `npm run test:cypress`    | Runs `prettier` format tests                          |
+| `npm run fix:format`      | Reformats all project files using `prettier`          |
+| `npm run storybook`       | Run React Storybook (made available at localhost:6006 |
+| `npm run build-storybook` | Create static react storybook for GitHub Pages        |
+
 **Description**
 
 A web app with a shared youtube music queue. The queue is shareable by a sendable URL and can be modified via an upvote/downvote system. The app has search functionality to find music using the YouTube API and allows you to skip, pause/play, and rewind.

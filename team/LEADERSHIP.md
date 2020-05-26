@@ -8,4 +8,3 @@
 | Thu 05/07 | Zhiyu Ning         | Will lead MVP demo                                     |
 | Mon 05/11 | Brandon Nadell     | Will lead second Retro                                 |
 | Tue 05/12 | Isaac Lam          | Will lead sprint meeting                               |
-
