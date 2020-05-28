@@ -239,15 +239,15 @@ firebase.removeSong = (roomId, song) => {
     });
 };
 
-firebase.createRoom = (user) => {
+firebase.createRoom = async (user) => {
   let roomKey = firebase.database().ref("rooms/").push().key;
-  firebase
+  return firebase
     .database()
     .ref("rooms/" + roomKey + "/")
     .set({
       creator: user.nickname,
-    });
-  return roomKey;
+    })
+    .then(() => roomKey);
 };
 
 firebase.getRooms = () => {
