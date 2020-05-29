@@ -10,18 +10,18 @@ export const getServerSideProps = optionalAuth;
 function HomePage(props) {
   const { user } = props;
   return (
-    <Layout user={user} database={firebase}>
+    <Layout data-cy="layout" user={user} database={firebase}>
       {user ? (
-        <div>
-          <div>
+        <div data-cy="room_home">
+          <div data-cy="create_room">
             <CreateRoom user={user} database={firebase}></CreateRoom>
           </div>
-          <div>
-            <JoinRoom database={firebase}></JoinRoom>
+          <div data-cy="join_room">
+            <JoinRoom user={user} database={firebase}></JoinRoom>
           </div>
         </div>
       ) : (
-        <div>You're not logged in!</div>
+        <div data-cy="not_logged">You're not logged in!</div>
       )}
     </Layout>
   );

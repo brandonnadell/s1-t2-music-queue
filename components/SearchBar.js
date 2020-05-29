@@ -9,7 +9,7 @@ import Table from "react-bootstrap/Table";
 import Alert from "react-bootstrap/Alert";
 
 var songs = [];
-var maxResults;
+// var maxResults;
 var songId = 0;
 
 const SearchBar = (props) => {
@@ -24,9 +24,13 @@ const SearchBar = (props) => {
   const fetchData = props.fetchData;
 
   useEffect(() => {
+    console.log("ran use effect--->", searchTerm);
+    console.log("ran use effect data--->", data);
+    console.log("ran use effect count--->", searchCount);
+
     if (searchTerm.length !== 0) {
       setLoading(true);
-      maxResults = 3;
+      // maxResults = 3;
       fetchData(searchTerm).then((res) => {
         setData(res);
         setLoading(false);
@@ -34,33 +38,71 @@ const SearchBar = (props) => {
     }
   }, [searchCount]);
 
-  function displayAllResults(param) {
-    setMoreResultsCount(moreResultsCount + 1);
-    maxResults = param;
+  // function displayAllResults(param) {
+  //   setMoreResultsCount(moreResultsCount + 1);
+  //   maxResults = param;
+  // }
+
+  SearchBar.getSongs = () => {
+    return songs;
+  };
+
+  SearchBar.setSearchCount = (num) => {
+    console.log("count--->", searchCount);
+    setSearchCount(num);
+    console.log("ran search count searchbar function.---->", num);
+  };
+  SearchBar.setData = (data) => {
+    setData(data);
+    console.log("ran data searchbar function.-->", data);
+  };
+  SearchBar.setSearchTerm = (term) => {
+    setSearchTerm(term);
+    console.log("ran search term searchbar function.---->", term);
+  };
+
+  function handleKeyPress(key) {
+    if (key === "Enter") {
+      setSearchCount(searchCount + 1);
+    }
   }
 
-  if (searchTerm.length !== 0) {
-    songs = (data.items || []).map((song) => {
-      return {
-        title: song.snippet.title
-          .replace(/&quot;/g, '"')
-          .replace(/&amp;/g, "&")
-          .replace(/&#39;/g, "'"),
-        artist: song.snippet.channelTitle,
-        img: song.snippet.thumbnails.high.url,
-        videoId: song.id.videoId,
-      };
-    });
-  }
+  // if (searchTerm.length !== 0) {
+  songs = (data.items || []).map((song) => {
+    return {
+      title: song.snippet.title
+        .replace(/&quot;/g, '"')
+        .replace(/&amp;/g, "&")
+        .replace(/&#39;/g, "'"),
+      artist: song.snippet.channelTitle,
+      img: song.snippet.thumbnails.high.url,
+      videoId: song.id.videoId,
+    };
+  });
+  if (songs.length === 0 && props.songCache.length !== 0)
+    songs = props.songCache;
+  // }
 
   return (
-    <div>
-      <InputGroup className="mb-3">
+    <div style={{ height: "100%" }}>
+      {/* <InputGroup className="mb-3">
         <FormControl
           placeholder="Search for music..."
           aria-label="Search for music..."
           aria-describedby="basic-addon2"
+          onChange={(e) => {
+            if (e.target.value === '') {
+              setData([]);
+            }
+            setSearchTerm(e.target.value)
+          }}
+<<<<<<< HEAD
+=======
+=======
           onChange={(e) => setSearchTerm(e.target.value)}
+>>>>>>> bn - enter key can be used to search and join a room
+>>>>>>> bn/zn - jest and cypress testing
+          onKeyPress={(e) => handleKeyPress(e.key)}
         />
         <InputGroup.Append>
           <Button
@@ -70,7 +112,7 @@ const SearchBar = (props) => {
             Search
           </Button>
         </InputGroup.Append>
-      </InputGroup>
+      </InputGroup> */}
       {data.error && (
         <Alert variant="danger">
           <Alert.Heading>
@@ -79,78 +121,65 @@ const SearchBar = (props) => {
           <p>{data.error.errors[0].message}</p>
         </Alert>
       )}
-      {songs.length > 0 && (
+      {songs.length > 0 ? (
         <Card>
-          <Card.Header as="h5">Results</Card.Header>
+          {/* <Card.Header as="h5">Results</Card.Header> */}
           {loading === true ? (
             <Spinner animation="border" role="status">
               <span className="sr-only">Loading...</span>
             </Spinner>
           ) : (
             <div>
-              <Table hover variant="light">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Title</th>
-                    <th>Artist</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {songs &&
-                    songs.slice(0, maxResults).map((song, ind) => (
-                      <tr key={song.title}>
-                        <td>
-                          <Button
-                            variant="outline-success"
-                            onClick={() =>
-                              database.createSong(
-                                song.videoId,
-                                song.title,
-                                song.img,
-                                roomId,
-                                props.user.nickname
-                              )
-                            }
-                          >
-                            Queue
-                          </Button>
-                        </td>
-                        <td>
-                          <Image
-                            className="img-responsive"
-                            src={song.img}
-                            height="40"
-                            width="40"
-                            rounded
-                          />{" "}
-                          {song.title}
-                        </td>
-                        <td>{song.artist}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </Table>
-              <Card.Footer>
-                {maxResults === 3 ? (
-                  <Button
-                    onClick={() => displayAllResults(10)}
-                    variant="outline-dark"
-                  >
-                    Show More Results
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => displayAllResults(3)}
-                    variant="outline-dark"
-                  >
-                    Show Less Results
-                  </Button>
-                )}
-              </Card.Footer>
+              {/* <Table hover variant="light"> */}
+              <tbody>
+                {songs &&
+                  songs.slice(0, songs.length).map((song, ind) => (
+                    <tr key={song.title}>
+                      <td style={{ width: "15%" }}>
+                        <Button
+                          variant="outline-success"
+                          onClick={() =>
+                            database.createSong(
+                              song.videoId,
+                              song.title,
+                              song.img,
+                              roomId,
+                              props.user.nickname
+                            )
+                          }
+                        >
+                          Queue
+                        </Button>
+                      </td>
+                      <td style={{ width: "65%" }}>
+                        <Image
+                          className="img-responsive"
+                          src={song.img}
+                          height="40"
+                          width="40"
+                          rounded
+                        />{" "}
+                        {song.title}
+                      </td>
+                      <td style={{ width: "20%" }}>{song.artist}</td>
+                    </tr>
+                  ))}
+              </tbody>
+              {/* </Table> */}
             </div>
           )}
         </Card>
+      ) : (
+        <center style={{ height: "100%" }}>
+          <Alert style={{ height: "100%", padding: "12%" }} variant="primary">
+            <Alert.Heading>Search results will show up here.</Alert.Heading>
+            <div style={{ fontStyle: "italic" }}>
+              Search for a song/artist you want to hear in the field above and
+              then hit 'Search' or enter. Once results are queried, you can hide
+              the results by clearing the input field.
+            </div>
+          </Alert>
+        </center>
       )}
     </div>
   );

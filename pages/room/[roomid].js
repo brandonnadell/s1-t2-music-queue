@@ -24,6 +24,7 @@ const Room = (props) => {
 
   useEffect(() => {
     try {
+      // REMOVE ROOM IF IT DOESNT HAVE CREATOR
       firebase
         .database()
         .ref("rooms")
@@ -37,14 +38,35 @@ const Room = (props) => {
               .ref("rooms/" + roomid)
               .remove();
           } else {
+            console.log("res---->", res);
             roomRef.on("value", (snapshot) => {
-              creator = snapshot.val().creator;
+              creator = (snapshot.val() && snapshot.val().creator) || "";
               setAdmin(creator);
             });
           }
         });
 
+      // BAN USER IF BANNED FROM ROOM
+      let banned = [];
       roomRef = firebase.database().ref("rooms/" + roomid);
+      roomRef
+        .child("bannedUsers")
+        .once("value")
+        .then((snapshot) => {
+          snapshot.forEach((child) => {
+            banned.push(child.val().val.nickname);
+            if (user.nickname === child.val().val.nickname) {
+              window.alert(
+                "You are banned from joining this room! Try a different room or create your own room."
+              );
+              router.push("/");
+            }
+          });
+        });
+
+      // console.log('banned users---->s', banned)
+
+      // ADD USER TO ROOM
       roomRef
         .child("users")
         .once("value")
@@ -53,14 +75,20 @@ const Room = (props) => {
           snapshot.forEach((entry) => {
             users.push(entry.val().nickname);
           });
-          console.log(users);
-          if (!users.includes(user.nickname)) {
+          // console.log(users);
+          if (
+            !users.includes(user.nickname) &&
+            !banned.includes(user.nickname)
+          ) {
+            // console.log('why is it runnning this???')
             userid = roomRef.child("/users").push(user).key;
           } else {
+            // console.log("got pushed back to home page")
             router.push("/");
           }
         });
 
+      // GET DB SONGS AND ADD TO CLIENT ROOM
       firebaseRef = firebase.database().ref("rooms/" + roomid + "/songs");
       firebaseRef.orderByChild("position").on("value", (snapshot) => {
         // Grab the current value of what was written to the Realtime Database.
@@ -79,7 +107,9 @@ const Room = (props) => {
         setList(tempList.reverse());
       });
 
-      window.addEventListener("beforeunload", function (event) {
+      // GET AONTHER USER TO MAKE ADMIN, OTHERWISE DELETE
+
+      window.addEventListener("beforeunload", (event) => {
         roomRef.child("users/" + userid).remove();
         roomRef.once("value").then((res) => {
           if (res.hasChild("users")) {
@@ -121,22 +151,13 @@ const Room = (props) => {
       <p>Room: {roomid}</p>
       <div>
         <div>
-          <SearchBar
-            roomId={roomid}
-            user={user}
-            database={firebase}
-            fetchData={fetchData}
-          />
-        </div>
-        <div>
-          {/* {console.log("song list object: ", list)} */}
           <VideoPlayer
             list={list}
-            muted={false}
             roomId={roomid}
             user={user}
             admin={admin}
             database={firebase}
+            fetchData={fetchData}
           />
         </div>
       </div>
