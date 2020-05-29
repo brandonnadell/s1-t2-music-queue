@@ -17,7 +17,7 @@ function HomePage(props) {
             <CreateRoom user={user} database={firebase}></CreateRoom>
           </div>
           <div>
-            <JoinRoom database={firebase}></JoinRoom>
+            <JoinRoom user={user} database={firebase}></JoinRoom>
           </div>
         </div>
       ) : (
