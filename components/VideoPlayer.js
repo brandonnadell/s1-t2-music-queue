@@ -149,13 +149,6 @@ export function VideoPlayer(props) {
     }
   }
 
-  function getVote(song) {
-    return song.val.votedUsers != null &&
-      song.val.votedUsers[props.user.nickname] != null
-      ? song.val.votedUsers[props.user.nickname].vote
-      : 0;
-  }
-
   // console.error("current progress")
   return (
     <div>
@@ -256,7 +249,7 @@ export function VideoPlayer(props) {
                               <center>
                                 <Button
                                   variant={
-                                    getVote(song) == 1
+                                    getVote(song, props.user.nickname) == 1
                                       ? "primary"
                                       : "outline-primary"
                                   }
@@ -267,7 +260,7 @@ export function VideoPlayer(props) {
                                 </Button>
                                 <Button
                                   variant={
-                                    getVote(song) == -1
+                                    getVote(song, props.user.nickname) == -1
                                       ? "danger"
                                       : "outline-danger"
                                   }
@@ -331,5 +324,38 @@ export function VideoPlayer(props) {
       />
     </div>
   );
+}
+export function getVote(song, nickname) {
+  return song.val.votedUsers != null && song.val.votedUsers[nickname] != null
+    ? song.val.votedUsers[nickname].vote
+    : 0;
+}
+export function upvoteTest(song, user) {
+  if (
+    song.val.votedUsers != null &&
+    song.val.votedUsers[user.nickname] != null
+  ) {
+    let vote = song.val.votedUsers[user.nickname].vote;
+    if (vote == 1) {
+      // database.removeUpvote(roomId, song, user);
+      song.val.votedUsers[user.nickname] = null;
+      // database.changePosition(song, roomId, -1);
+      song.val.position--;
+      song.val.rating--;
+    } else if (vote == -1) {
+      // database.downvoteToUpvote(roomId, song, user);
+      song.val.votedUsers[user.nickname] = 1;
+      // database.changePosition(song, roomId, 2);
+      song.val.position += 2;
+      song.val.rating += 2;
+    }
+  } else {
+    // database.addUpvote(roomId, song, user);
+    song.val.votedUsers[user.nickname] = 1;
+    // database.changePosition(song, roomId, 1);
+    song.val.position++;
+    song.val.rating++;
+  }
+  return song;
 }
 export default VideoPlayer;

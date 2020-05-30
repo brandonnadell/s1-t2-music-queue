@@ -1,9 +1,11 @@
-# Retro 5/26/20  
+# Retro 5/26/20
+
 - Led by: Isaac Lam
 - Present: Brandon Nadell, Ryan Simone, Yuval Steinhart, Zhiyu Ning
 
 ## Action Item
-- a goal: Improve the UI (fix the "bootstrap" look) 
+
+- a goal: Improve the UI (fix the "bootstrap" look)
 - a change: keep kanban board up to date, make sure our project looks production level
 - a measurement: how unique and effective our UI is
 

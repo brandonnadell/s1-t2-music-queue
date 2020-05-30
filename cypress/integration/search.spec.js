@@ -3,7 +3,7 @@ describe("YouTube Search API", () => {
   it("returns an object with with search results given a valid API key", () => {
     cy.request(
       "search?part=snippet&maxResults=5&order=relevance&q=travis&type=video&videoCategoryId=10&key=" +
-        "AIzaSyD4w-HBATX5lOQXlsavwuMZxi1MJj-Xkg8"
+        "AIzaSyD8yr4vFW6dIjlAbU5QflsGefseN9IiMXM"
     ).then((response) => {
       expect(response.body).to.have.property(
         "kind",

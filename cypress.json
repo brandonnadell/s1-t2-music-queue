@@ -1,3 +1,4 @@
 {
-    "baseUrl": "https://www.googleapis.com/youtube/v3"
+  "baseUrl": "https://www.googleapis.com/youtube/v3",
+  "Referer": "https://explorer.apis.google.com"
 }

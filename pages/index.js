@@ -10,7 +10,7 @@ export const getServerSideProps = optionalAuth;
 function HomePage(props) {
   const { user } = props;
   return (
-    <Layout user={user} database={firebase}>
+    <Layout data-cy="layout" user={user} database={firebase}>
       {user ? (
         <div>
           <div>

@@ -10,4 +10,4 @@
 | Tue 05/12 | Isaac Lam          | Will lead sprint meeting                               |
 | Thu 05/21 | Zhiyu Ning         | 2nd iteration demo                                     |
 | Tue 05/26 | Isaac Lam          | Will lead third Retro                                  |
-| Tue 05/26 | Yuval Steinhart    | Will lead 2nd sprint meeting                                |
+| Tue 05/26 | Yuval Steinhart    | Will lead 2nd sprint meeting                           |

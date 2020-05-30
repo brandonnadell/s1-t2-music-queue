@@ -23,8 +23,23 @@ var prodConfig = {
   measurementId: "G-ZYFFQ1VKQ0",
 };
 
+var testingConfig = {
+  apiKey: "AIzaSyA0VFNDZf0Q6fCCv9HApoVwjlmG91sOAwI",
+  authDomain: "s1-t2-music-queue-testing.firebaseapp.com",
+  databaseURL: "https://s1-t2-music-queue-testing.firebaseio.com",
+  projectId: "s1-t2-music-queue-testing",
+  storageBucket: "s1-t2-music-queue-testing.appspot.com",
+  messagingSenderId: "754596016797",
+  appId: "1:754596016797:web:ead3e732648dba3a5eda74",
+  measurementId: "G-V5VY5TM1T3",
+};
+
 var config =
-  configuration.FIREBASE_ENV === "development" ? devConfig : prodConfig;
+  configuration.FIREBASE_ENV === "development"
+    ? devConfig
+    : configuration.FIREBASE_ENV === "testing"
+    ? testingConfig
+    : prodConfig;
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
