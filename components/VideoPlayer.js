@@ -13,6 +13,53 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Holder from "./Holder";
+// import BlackScreen from "../images/BlackScreen.jpg";
+
+VideoPlayer.upvote = (song, database, roomId, user) => {
+  if (
+    song.val.votedUsers != null &&
+    song.val.votedUsers[user.nickname] != null
+  ) {
+    let vote = song.val.votedUsers[user.nickname].vote;
+    if (vote == 1) {
+      database.removeUpvote(roomId, song, user);
+      database.changePosition(song, roomId, -1);
+    } else if (vote == -1) {
+      database.downvoteToUpvote(roomId, song, user);
+      database.changePosition(song, roomId, 2);
+    }
+  } else {
+    database.addUpvote(roomId, song, user);
+    database.changePosition(song, roomId, 1);
+  }
+};
+
+VideoPlayer.downvote = (song, database, roomId, user) => {
+  if (
+    song.val.votedUsers != null &&
+    song.val.votedUsers[user.nickname] != null
+  ) {
+    let vote = song.val.votedUsers[user.nickname].vote;
+    if (vote == -1) {
+      database.removeDownvote(roomId, song, user);
+      database.changePosition(song, roomId, 1);
+    } else if (vote == 1) {
+      database.upvoteToDownvote(roomId, song, user);
+      database.changePosition(song, roomId, -2);
+    }
+  } else {
+    database.addDownvote(roomId, song, user);
+    database.changePosition(song, roomId, -1);
+  }
+};
+
+VideoPlayer.getVote = (song, user) => {
+  return song.val.votedUsers != null &&
+    song.val.votedUsers[user.nickname] != null
+    ? song.val.votedUsers[user.nickname].vote
+    : 0;
+};
 
 export function VideoPlayer(props) {
   let queue = props.queue;
@@ -50,9 +97,7 @@ export function VideoPlayer(props) {
 
   const divStyle = {
     display: "flex",
-    alignItems: "top",
     padding: "20px",
-    width: "800px",
   };
 
   function handleToggle() {
@@ -111,200 +156,94 @@ export function VideoPlayer(props) {
     setPlayer(player);
   }
 
-  function upvote(song) {
-    if (
-      song.val.votedUsers != null &&
-      song.val.votedUsers[props.user.nickname] != null
-    ) {
-      let vote = song.val.votedUsers[props.user.nickname].vote;
-      if (vote == 1) {
-        database.removeUpvote(roomId, song, props.user);
-        database.changePosition(song, roomId, -1);
-      } else if (vote == -1) {
-        database.downvoteToUpvote(roomId, song, props.user);
-        database.changePosition(song, roomId, 2);
-      }
-    } else {
-      database.addUpvote(roomId, song, props.user);
-      database.changePosition(song, roomId, 1);
-    }
-  }
-
-  function downvote(song) {
-    if (
-      song.val.votedUsers != null &&
-      song.val.votedUsers[props.user.nickname] != null
-    ) {
-      let vote = song.val.votedUsers[props.user.nickname].vote;
-      if (vote == -1) {
-        database.removeDownvote(roomId, song, props.user);
-        database.changePosition(song, roomId, 1);
-      } else if (vote == 1) {
-        database.upvoteToDownvote(roomId, song, props.user);
-        database.changePosition(song, roomId, -2);
-      }
-    } else {
-      database.addDownvote(roomId, song, props.user);
-      database.changePosition(song, roomId, -1);
-    }
-  }
-
-  function getVote(song) {
-    return song.val.votedUsers != null &&
-      song.val.votedUsers[props.user.nickname] != null
-      ? song.val.votedUsers[props.user.nickname].vote
-      : 0;
-  }
-
-  // console.error("current progress")
+  img.length === 0
+    ? (img =
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSn7jUzIG-bPH-fiHZZppkCoN8yY5HWkNoO2VP-QmEjDb8xho_v&usqp=CAU")
+    : img;
   return (
     <div>
-      {props.list && props.list.length !== 0 ? (
-        <div style={divStyle}>
-          <div>
-            <Card style={{ width: "18rem" }}>
-              <Card.Img variant="top" src={img} />
-              {started ? (
-                <Card.Body>
+      <div style={divStyle}>
+        <div>
+          <Card style={{ width: "19rem", height: "440px" }}>
+            <Card.Img variant="top" src={img} style={{ height: "275px" }} />
+            {started ? (
+              <Card.Body>
+                <div>
                   <div>
                     <div>
+                      {playing ? "Playing" : "Paused"}: {title}
+                    </div>
+                    {props.user.nickname === creator ? (
                       <div>
-                        {playing ? "Playing" : "Paused"}: {title}
+                        <ButtonGroup aria-label="Song Options">
+                          <Button
+                            variant="outline-primary"
+                            onClick={handleToggle}
+                          >
+                            {playing ? "Pause" : "Play"}
+                          </Button>
+                          <Button
+                            variant="outline-primary"
+                            onClick={handleSkipToEnd}
+                          >
+                            Skip
+                          </Button>
+                        </ButtonGroup>
                       </div>
-                      {props.user.nickname === creator ? (
-                        <div>
-                          <ButtonGroup aria-label="Song Options">
-                            <Button
-                              variant="outline-primary"
-                              onClick={handleToggle}
-                            >
-                              {playing ? "Pause" : "Play"}
-                            </Button>
-                            <Button
-                              variant="outline-primary"
-                              onClick={handleSkipToEnd}
-                            >
-                              Skip
-                            </Button>
-                          </ButtonGroup>
-                        </div>
-                      ) : (
-                        <div></div>
-                      )}
-                    </div>
-
-                    <div>
-                      <ProgressBar now={progress} />
-                    </div>
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
-                </Card.Body>
-              ) : (
-                <Spinner animation="border" role="status">
-                  <span className="sr-only">Loading...</span>
-                </Spinner>
-              )}
-            </Card>
-          </div>
-          <div>
-            {props.list.length > 1 ? (
-              <Card style={{ width: "165%" }}>
-                <Card.Header as="h5">Queue</Card.Header>
-                <Table striped>
-                  <thead
-                    style={{
-                      display: "table",
-                      width: "100%",
-                      tableLayout: "fixed",
-                    }}
-                  >
-                    <tr>
-                      <th style={{ width: "9%" }}></th>
-                      <th style={{ width: "46%" }}>Song</th>
-                      <th style={{ width: "10%" }}>
-                        <center>Rating</center>
-                      </th>
-                      <th style={{ width: "15%" }}>
-                        <center>Vote</center>
-                      </th>
-                      <th style={{ width: "20%" }}>Added By</th>
-                    </tr>
-                  </thead>
-                  <tbody
-                    style={{
-                      height: "277px",
-                      overflow: "scroll",
-                      display: "block",
-                    }}
-                  >
-                    {props.list.slice(1, props.list.length).map((song, ind) => (
-                      <tr
-                        key={song.title}
+
+                  <div>
+                    <ProgressBar now={progress} />
+                  </div>
+                </div>
+              </Card.Body>
+            ) : (
+              <div>
+                {title.length > 0 ? (
+                  <Spinner animation="border" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </Spinner>
+                ) : (
+                  <Card.Body style={{ height: "164px", padding: "0px" }}>
+                    <Alert variant="info" style={{ height: "100%" }}>
+                      <Alert.Heading>
+                        <h5>
+                          Songs currently playing in the room will show up here.
+                        </h5>
+                      </Alert.Heading>
+                      {/* <br> */}
+                      <hr />
+                      <div
                         style={{
-                          display: "table",
-                          width: "100%",
-                          tableLayout: "fixed",
+                          fontSize: "12px",
+                          fontStyle: "italic",
+                          textAlign: "center",
                         }}
                       >
-                        <td style={{ width: "9%" }}>{ind + 1}</td>
-                        <td style={{ width: "46%" }}>{song.val.title}</td>
-                        <td style={{ width: "10%" }}>
-                          <center>{song.val.rating}</center>
-                        </td>
-                        <td style={{ width: "15%" }}>
-                          {song.val.addedBy !== props.user.nickname ? (
-                            <div>
-                              <center>
-                                <Button
-                                  variant={
-                                    getVote(song) == 1
-                                      ? "primary"
-                                      : "outline-primary"
-                                  }
-                                  size="sm"
-                                  onClick={() => upvote(song)}
-                                >
-                                  <CaretUpFill />
-                                </Button>
-                                <Button
-                                  variant={
-                                    getVote(song) == -1
-                                      ? "danger"
-                                      : "outline-danger"
-                                  }
-                                  size="sm"
-                                  onClick={() => downvote(song)}
-                                >
-                                  <CaretDownFill />
-                                </Button>
-                              </center>
-                            </div>
-                          ) : (
-                            <center>
-                              <Button
-                                variant="danger"
-                                onClick={() =>
-                                  database.removeSong(roomId, song)
-                                }
-                              >
-                                Delete
-                              </Button>
-                            </center>
-                          )}
-                        </td>
-                        <td style={{ width: "20%" }}>{song.val.addedBy}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </Card>
-            ) : (
-              <div></div>
+                        There are currently no songs being played at the moment.
+                        Add songs to the player in the search on the right!
+                      </div>
+                    </Alert>
+                  </Card.Body>
+                )}
+              </div>
             )}
-          </div>
+          </Card>
         </div>
-      ) : (
-        <div></div>
-      )}
+        <div>
+          <Holder
+            list={props.list}
+            database={database}
+            user={props.user}
+            roomId={roomId}
+            creator={creator}
+            fetchData={props.fetchData}
+          />
+        </div>
+      </div>
       <ReactPlayer
         url={url}
         key={key}
