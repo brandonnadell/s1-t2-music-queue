@@ -1,34 +1,37 @@
 import firebase from "../../client/firebase";
+import { testingConfig } from "../../client/firebase";
 
-describe("Home Page", () => {
+describe("Room Page", () => {
   beforeEach(() => {
     // runs before each test in the block
     cy.loginAsAdmin();
-    cy.visit("http://localhost:3000");
+    let song_key = firebase.database().ref("rooms/room_key/songs").push().key;
+    firebase.database().ref("rooms/room_key/songs").child(song_key).set({
+      title: "Song",
+      rating: 0,
+      position: -1,
+    });
+    let user_key = firebase.database().ref("rooms/room_key/users").push().key;
+    firebase.database().ref("rooms/room_key/users").child(user_key).set({
+      nickname: "cgaucho",
+    });
+    /*
+      Writing to database doesn't work...
+      Maybe because there isn't a current listener or user or something
+    */
+    cy.visit("http://localhost:3000/room/room_key");
   });
 
-  /*
-    TODO:
-    cy.loginAsAdmin() routes to login page, instead of actually logging the user in
-  */
-
-  it("went to localhost", () => {
-    cy.url().should("eq", "http://localhost:3000/");
+  it("went to room homepage", () => {
+    cy.url().should("eq", "http://localhost:3000/room/room_key");
   });
 
-  it("has create room component", () => {
-    cy.get("createroom").should("exist");
+  it("has room key label", () => {
+    cy.get("p").should("have.text", "Room: room_key");
   });
 
-  it("has create room component", () => {
-    cy.get("createRoom").should("exist");
-  });
-
-  it("has create room component3", () => {
-    cy.get("CreateRoom").should("exist");
-  });
-
-  it("has layout", () => {
-    cy.get("[data-cy=layout]").should("exist");
+  //fails
+  it("has vote button", () => {
+    cy.get("center button:first").should("have.class", "active");
   });
 });

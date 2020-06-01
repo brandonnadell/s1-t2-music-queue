@@ -12,16 +12,17 @@ function HomePage(props) {
   return (
     <Layout data-cy="layout" user={user} database={firebase}>
       {user ? (
-        <div>
-          <div>
+        <div data-cy="room_home">
+          Logged in
+          <div data-cy="create_room">
             <CreateRoom user={user} database={firebase}></CreateRoom>
           </div>
-          <div>
+          <div data-cy="join_room">
             <JoinRoom database={firebase}></JoinRoom>
           </div>
         </div>
       ) : (
-        <div>You're not logged in!</div>
+        <div data-cy="not_logged">You're not logged in!</div>
       )}
     </Layout>
   );

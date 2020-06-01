@@ -1,12 +1,16 @@
 import firebase from "../../client/firebase";
 
-describe("Home Page", () => {
+describe("Home Page (Not Logged In)", () => {
   beforeEach(() => {
     // runs before each test in the block
     cy.visit("http://localhost:3000");
   });
 
-  it("has not logged in warning", () => {
-    cy.get("div").should("have.text", "You're not logged in!");
+  it("not logged in warning", () => {
+    cy.get("[data-cy=not_logged]").should("exist");
+  });
+
+  it("has a login button", () => {
+    cy.get("[data-cy=login]").should("exist");
   });
 });

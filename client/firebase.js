@@ -23,7 +23,7 @@ var prodConfig = {
   measurementId: "G-ZYFFQ1VKQ0",
 };
 
-var testingConfig = {
+export const testingConfig = {
   apiKey: "AIzaSyA0VFNDZf0Q6fCCv9HApoVwjlmG91sOAwI",
   authDomain: "s1-t2-music-queue-testing.firebaseapp.com",
   databaseURL: "https://s1-t2-music-queue-testing.firebaseio.com",
