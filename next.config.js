@@ -17,7 +17,6 @@ module.exports = {
       process.env.SESSION_COOKIE_SECRET ||
       "viloxyf_z2GW6K4CT-KQD_MoLEA2wqv5jWuq4Jd0P7ymgG5GJGMpvMneXZzhK3sL",
     SESSION_COOKIE_LIFETIME: 7200, // 2 hours
-    MONGODB_URI: process.env.MONGODB_URI,
     FIREBASE_ENV: process.env.FIREBASE_ENV,
     FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
