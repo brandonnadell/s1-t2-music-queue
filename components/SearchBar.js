@@ -96,12 +96,7 @@ const SearchBar = (props) => {
             }
             setSearchTerm(e.target.value)
           }}
-<<<<<<< HEAD
-=======
-=======
           onChange={(e) => setSearchTerm(e.target.value)}
->>>>>>> bn - enter key can be used to search and join a room
->>>>>>> bn/zn - jest and cypress testing
           onKeyPress={(e) => handleKeyPress(e.key)}
         />
         <InputGroup.Append>
