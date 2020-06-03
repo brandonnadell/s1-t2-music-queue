@@ -153,7 +153,6 @@ const Room = (props) => {
         <div>
           <VideoPlayer
             list={list}
-            muted={false}
             roomId={roomid}
             user={user}
             admin={admin}

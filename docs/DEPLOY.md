@@ -1,4 +1,3 @@
-
 # DEPLOYMENT INSTRUCTIONS
 
 Video accompanying deployment instructions:  

@@ -103,6 +103,7 @@ const Holder = (props) => {
               />
               <InputGroup.Append>
                 <Button
+                  data-cy="search"
                   variant="outline-primary"
                   onClick={() => {
                     // setSearchCount(searchCount + 1)
@@ -122,6 +123,7 @@ const Holder = (props) => {
           </div>
           <div style={{ display: "flex", marginLeft: "2%" }}>
             <Button
+              data-cy="queue"
               // style={{ float: "right" }}
               variant="outline-warning"
               onClick={() => {
@@ -133,6 +135,7 @@ const Holder = (props) => {
             </Button>
             {props.creator === props.user.nickname ? (
               <Button
+                data-cy="ban_users"
                 // style={{ float: "right" }}
                 variant="outline-danger"
                 onClick={() => {
@@ -162,14 +165,18 @@ const Holder = (props) => {
                     >
                       <tr>
                         <th style={{ width: "9%" }}></th>
-                        <th style={{ width: "46%" }}>Song</th>
+                        <th style={{ width: "46%" }} data-cy="song">
+                          Song
+                        </th>
                         <th style={{ width: "10%" }}>
-                          <center>Rating</center>
+                          <center data-cy="rating">Rating</center>
                         </th>
                         <th style={{ width: "15%" }}>
-                          <center>Vote</center>
+                          <center data-cy="vote">Vote</center>
                         </th>
-                        <th style={{ width: "20%" }}>Added By</th>
+                        <th style={{ width: "20%" }} data-cy="added_by">
+                          Added By
+                        </th>
                       </tr>
                     </thead>
                     <Table
@@ -246,9 +253,13 @@ const Holder = (props) => {
                     >
                       <tr>
                         <th style={{ width: "10%" }}></th>
-                        <th style={{ width: "40%" }}>Name</th>
-                        <th style={{ width: "30%" }}>Display Name</th>
-                        <th style={{ width: "20%" }}>
+                        <th style={{ width: "40%" }} data-cy="name">
+                          Name
+                        </th>
+                        <th style={{ width: "30%" }} data-cy="display_name">
+                          Display Name
+                        </th>
+                        <th style={{ width: "20%" }} data-cy="ban_from_room">
                           <center>Ban from Room</center>
                         </th>
                       </tr>

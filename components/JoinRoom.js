@@ -46,6 +46,12 @@ const JoinRoom = (props) => {
       });
   }
 
+  function handleKeyPress(key) {
+    if (key === "Enter") {
+      join();
+    }
+  }
+
   return (
     <div>
       <InputGroup className="mb-3">
@@ -54,6 +60,7 @@ const JoinRoom = (props) => {
           aria-label="Enter a Room ID"
           aria-describedby="basic-addon2"
           onChange={(e) => setRoomId(e.target.value)}
+          onKeyPress={(e) => handleKeyPress(e.key)}
         />
         <InputGroup.Append>
           <Button variant="outline-dark" onClick={() => join()}>

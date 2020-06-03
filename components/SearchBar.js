@@ -96,6 +96,7 @@ const SearchBar = (props) => {
             }
             setSearchTerm(e.target.value)
           }}
+          onChange={(e) => setSearchTerm(e.target.value)}
           onKeyPress={(e) => handleKeyPress(e.key)}
         />
         <InputGroup.Append>

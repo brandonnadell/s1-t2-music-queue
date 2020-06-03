@@ -1,5 +1,12 @@
 import ReactPlayer from "react-player";
-import { CaretUpFill, CaretDownFill } from "react-bootstrap-icons";
+import {
+  CaretUpFill,
+  CaretDownFill,
+  VolumeMuteFill,
+  VolumeUpFill,
+  PlayFill,
+  PauseFill,
+} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -79,7 +86,7 @@ export function VideoPlayer(props) {
     title = data.title;
     img = data.image;
   }
-  let muted = props.muted;
+  const [muted, setMuted] = useState(false);
   const [player, setPlayer] = useState("");
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState("");
@@ -270,5 +277,38 @@ export function VideoPlayer(props) {
       />
     </div>
   );
+}
+export function getVote(song, nickname) {
+  return song.val.votedUsers != null && song.val.votedUsers[nickname] != null
+    ? song.val.votedUsers[nickname].vote
+    : 0;
+}
+export function upvoteTest(song, user) {
+  if (
+    song.val.votedUsers != null &&
+    song.val.votedUsers[user.nickname] != null
+  ) {
+    let vote = song.val.votedUsers[user.nickname].vote;
+    if (vote == 1) {
+      // database.removeUpvote(roomId, song, user);
+      song.val.votedUsers[user.nickname] = null;
+      // database.changePosition(song, roomId, -1);
+      song.val.position--;
+      song.val.rating--;
+    } else if (vote == -1) {
+      // database.downvoteToUpvote(roomId, song, user);
+      song.val.votedUsers[user.nickname] = 1;
+      // database.changePosition(song, roomId, 2);
+      song.val.position += 2;
+      song.val.rating += 2;
+    }
+  } else {
+    // database.addUpvote(roomId, song, user);
+    song.val.votedUsers[user.nickname] = 1;
+    // database.changePosition(song, roomId, 1);
+    song.val.position++;
+    song.val.rating++;
+  }
+  return song;
 }
 export default VideoPlayer;
