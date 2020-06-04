@@ -4,10 +4,13 @@ import AppFooter from "../../components/AppFooter";
 import SearchBar from "../../components/SearchBar";
 import VideoPlayer from "../../components/VideoPlayer";
 import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import Layout from "../../components/Layout";
 import { requiredAuth } from "../../utils/ssr";
 import firebase from "../../client/firebase";
 import { fetchData } from "../../utils/youtube_api";
+import Button from "react-bootstrap/Button";
 
 export const getServerSideProps = requiredAuth;
 
@@ -148,7 +151,21 @@ const Room = (props) => {
 
   return (
     <Layout user={user}>
-      <p>Room: {roomid}</p>
+      <div style={{ display: "flex" }}>
+        <p style={{ marginTop: "15px" }}>Room: {roomid}</p>
+        <CopyToClipboard text={roomid}>
+          <Button
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px",
+              marginLeft: "10px",
+            }}
+            variant="outline-dark"
+          >
+            Copy
+          </Button>
+        </CopyToClipboard>
+      </div>
       <div>
         <div>
           <VideoPlayer
