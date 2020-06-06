@@ -269,4 +269,23 @@ firebase.getRooms = () => {
   return firebase.database().ref("rooms").once("value");
 };
 
+firebase.changeNickname = (roomnickname, roomId) => {
+  firebase
+    .database()
+    .ref("rooms/" + roomId)
+    .child("roomNickname")
+    .set(roomnickname + " (roomid:" + roomId + ")");
+};
+
+firebase.updateNickname = (roomId) => {
+  let ref = firebase.database().ref("rooms/" + roomId);
+  var nickname = "";
+  if (ref) {
+    ref.once("value").then((snapshot) => {
+      nickname = snapshot.child("roomNickname").val();
+    });
+  }
+  return nickname;
+};
+
 export default firebase;
