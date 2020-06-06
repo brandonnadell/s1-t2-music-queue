@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 
 const DisplayRoom = (props) => {
   const [tempNickname, setTempNickname] = useState("");
+  let creator = props.admin;
 
   function updateNickname() {
     props.database.changeNickname(tempNickname, props.roomId);
@@ -14,13 +15,17 @@ const DisplayRoom = (props) => {
     <div>
       <InputGroup className="mb-3">
         <FormControl
-          placeholder="Enter Nickname for Room..."
+          placeholder="Enter Nickname..."
           onChange={(e) => setTempNickname(e.target.value)}
         />
         <InputGroup.Append>
-          <Button variant="outline-dark" onClick={() => updateNickname()}>
-            Rename
-          </Button>
+          {creator === props.user.nickname ? (
+            <Button variant="outline-dark" onClick={() => updateNickname()}>
+              Rename Room
+            </Button>
+          ) : (
+            <div></div>
+          )}
         </InputGroup.Append>
       </InputGroup>
     </div>

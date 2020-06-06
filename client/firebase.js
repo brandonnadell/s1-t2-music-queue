@@ -261,6 +261,7 @@ firebase.createRoom = async (user) => {
     .ref("rooms/" + roomKey + "/")
     .set({
       creator: user.nickname,
+      roomNickname: roomKey,
     })
     .then(() => roomKey);
 };
