@@ -1,12 +1,5 @@
 import ReactPlayer from "react-player";
-import {
-  CaretUpFill,
-  CaretDownFill,
-  VolumeMuteFill,
-  VolumeUpFill,
-  PlayFill,
-  PauseFill,
-} from "react-bootstrap-icons";
+import { PlayFill, PauseFill } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
@@ -21,7 +14,7 @@ import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Holder from "./Holder";
-// import BlackScreen from "../images/BlackScreen.jpg";
+import Mute from "./Mute";
 
 VideoPlayer.upvote = (song, database, roomId, user) => {
   if (
@@ -134,6 +127,7 @@ export function VideoPlayer(props) {
       if (data.progress !== 0) player.seekTo(data.progress, false);
       database.updatePlaying(roomId, key, true);
     }
+    resetVolume();
   }
 
   function handleReady() {
@@ -163,6 +157,15 @@ export function VideoPlayer(props) {
     setPlayer(player);
   }
 
+  function toggleMute(muted) {
+    setMuted(muted);
+    resetVolume();
+  }
+
+  function resetVolume() {
+    player.getInternalPlayer().setVolume(100);
+  }
+
   img.length === 0
     ? (img =
         "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSn7jUzIG-bPH-fiHZZppkCoN8yY5HWkNoO2VP-QmEjDb8xho_v&usqp=CAU")
@@ -187,7 +190,7 @@ export function VideoPlayer(props) {
                             variant="outline-primary"
                             onClick={handleToggle}
                           >
-                            {playing ? "Pause" : "Play"}
+                            {playing ? <PauseFill /> : <PlayFill />}
                           </Button>
                           <Button
                             variant="outline-primary"
@@ -195,16 +198,16 @@ export function VideoPlayer(props) {
                           >
                             Skip
                           </Button>
+                          <Mute muted={muted} toggleMute={toggleMute} />
                         </ButtonGroup>
                       </div>
                     ) : (
-                      <div></div>
+                      <div>
+                        <Mute muted={muted} toggleMute={toggleMute} />
+                      </div>
                     )}
                   </div>
-
-                  <div>
-                    <ProgressBar now={progress} />
-                  </div>
+                  <ProgressBar now={progress} />
                 </div>
               </Card.Body>
             ) : (
