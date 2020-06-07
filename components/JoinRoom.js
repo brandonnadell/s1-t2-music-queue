@@ -53,7 +53,7 @@ const JoinRoom = (props) => {
   }
 
   return (
-    <div>
+    <div className="joinRoom">
       <InputGroup className="mb-3">
         <FormControl
           placeholder="Enter a Room ID"
@@ -74,6 +74,13 @@ const JoinRoom = (props) => {
         <p></p>
       )}
       {invalidId ? <p>Invalid ID, please try a different one</p> : <p></p>}
+      <style jsx>{`
+        .joinRoom {
+          position: absolute;
+          top: 700px;
+          left: 550px;
+        }
+      `}</style>
     </div>
   );
 };
