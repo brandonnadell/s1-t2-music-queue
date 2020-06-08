@@ -140,7 +140,7 @@ const Holder = (props) => {
                 // style={{ float: "right" }}
                 variant="outline-danger"
                 onClick={() => {
-                  setToggleState("ban");
+                  setToggleState("banordisplay");
                   cacheSongsBeforeToggle();
                 }}
               >
@@ -151,7 +151,7 @@ const Holder = (props) => {
                 data-cy="userlist"
                 variant="outline-success"
                 onClick={() => {
-                  setToggleState("userlist");
+                  setToggleState("banordisplay");
                   cacheSongsBeforeToggle();
                 }}
               >
@@ -251,89 +251,94 @@ const Holder = (props) => {
                     </Table>
                   </div>
                 );
-              case "ban":
+              case "banordisplay":
                 return (
                   <div>
-                    <thead
-                      style={{
-                        display: "table",
-                        width: "100%",
-                        tableLayout: "fixed",
-                      }}
-                    >
-                      <tr>
-                        <th style={{ width: "10%" }}></th>
-                        <th style={{ width: "40%" }} data-cy="name">
-                          Name
-                        </th>
-                        <th style={{ width: "30%" }} data-cy="display_name">
-                          Display Name
-                        </th>
-                        <th style={{ width: "20%" }} data-cy="ban_from_room">
-                          <center>Ban from Room</center>
-                        </th>
-                      </tr>
-                    </thead>
-                    <Table
-                      hover
-                      variant="light"
-                      style={{ marginBottom: "0px", height: "323px" }}
-                    >
-                      <tbody
-                        style={{
-                          height: "323px",
-                          overflow: "scroll",
-                          display: "block",
-                        }}
-                      >
-                        <Ban
-                          userList={userList}
-                          roomId={props.roomId}
-                          database={props.database}
-                        />
-                      </tbody>
-                    </Table>
-                  </div>
-                );
-              case "userlist":
-                return (
-                  <div>
-                    <thead
-                      style={{
-                        display: "table",
-                        width: "100%",
-                        tableLayout: "fixed",
-                      }}
-                    >
-                      <tr>
-                        <th style={{ width: "10%" }}></th>
-                        <th style={{ width: "40%" }} data-cy="name">
-                          Name
-                        </th>
-                        <th style={{ width: "30%" }} data-cy="display_name">
-                          Display Name
-                        </th>
-                      </tr>
-                    </thead>
-                    <Table
-                      hover
-                      variant="light"
-                      style={{ marginBottom: "0px", height: "323px" }}
-                    >
-                      <tbody
-                        style={{
-                          height: "323px",
-                          overflow: "scroll",
-                          display: "block",
-                        }}
-                      >
-                        <ViewUserList
-                          userList={userList}
-                          roomId={props.roomId}
-                          database={props.database}
-                        />
-                      </tbody>
-                    </Table>
+                    {props.creator === props.user.nickname ? (
+                      <div>
+                        <thead
+                          style={{
+                            display: "table",
+                            width: "100%",
+                            tableLayout: "fixed",
+                          }}
+                        >
+                          <tr>
+                            <th style={{ width: "10%" }}></th>
+                            <th style={{ width: "40%" }} data-cy="name">
+                              Name
+                            </th>
+                            <th style={{ width: "30%" }} data-cy="display_name">
+                              Display Name
+                            </th>
+                            <th
+                              style={{ width: "20%" }}
+                              data-cy="ban_from_room"
+                            >
+                              <center>Ban from Room</center>
+                            </th>
+                          </tr>
+                        </thead>
+                        <Table
+                          hover
+                          variant="light"
+                          style={{ marginBottom: "0px", height: "323px" }}
+                        >
+                          <tbody
+                            style={{
+                              height: "323px",
+                              overflow: "scroll",
+                              display: "block",
+                            }}
+                          >
+                            <Ban
+                              userList={userList}
+                              roomId={props.roomId}
+                              database={props.database}
+                            />
+                          </tbody>
+                        </Table>
+                      </div>
+                    ) : (
+                      <div>
+                        <thead
+                          style={{
+                            display: "table",
+                            width: "100%",
+                            tableLayout: "fixed",
+                          }}
+                        >
+                          <tr>
+                            <th style={{ width: "10%" }}></th>
+                            <th style={{ width: "40%" }} data-cy="name">
+                              Name
+                            </th>
+                            <th style={{ width: "30%" }} data-cy="display_name">
+                              Display Name
+                            </th>
+                          </tr>
+                        </thead>
+                        <Table
+                          hover
+                          variant="light"
+                          style={{ marginBottom: "0px", height: "323px" }}
+                        >
+                          <tbody
+                            style={{
+                              height: "323px",
+                              overflow: "scroll",
+                              display: "block",
+                            }}
+                          >
+                            <ViewUserList
+                              userList={userList}
+                              roomId={props.roomId}
+                              database={props.database}
+                            />
+                          </tbody>
+                        </Table>
+                      </div>
+                    )}
                   </div>
                 );
               default:
