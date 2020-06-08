@@ -13,21 +13,21 @@ const DisplayRoom = (props) => {
 
   return (
     <div>
-      <InputGroup className="mb-3">
-        <FormControl
-          placeholder="Enter Nickname..."
-          onChange={(e) => setTempNickname(e.target.value)}
-        />
-        <InputGroup.Append>
-          {creator === props.user.nickname ? (
+      {creator === props.user.nickname ? (
+        <InputGroup className="mb-3">
+          <FormControl
+            placeholder="Enter Nickname..."
+            onChange={(e) => setTempNickname(e.target.value)}
+          />
+          <InputGroup.Append>
             <Button variant="outline-dark" onClick={() => updateNickname()}>
               Rename Room
             </Button>
-          ) : (
-            <div></div>
-          )}
-        </InputGroup.Append>
-      </InputGroup>
+          </InputGroup.Append>
+        </InputGroup>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };
