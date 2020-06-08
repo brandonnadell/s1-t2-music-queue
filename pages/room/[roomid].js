@@ -22,7 +22,8 @@ const Room = (props) => {
   const [admin, setAdmin] = useState("");
   const [roomnickname, setRoomNickname] = useState("");
   const user = props.user;
-  let userid;
+  const [userid, setUserid] = useState("");
+  let localid;
   let firebaseRef;
   let roomRef;
   let creator;
@@ -86,7 +87,12 @@ const Room = (props) => {
             !banned.includes(user.nickname)
           ) {
             // console.log('why is it runnning this???')
-            userid = roomRef.child("/users").push(user).key;
+            localid = roomRef.child("/users").push(user).key;
+            roomRef
+              .child("/users/" + localid)
+              .child("queued")
+              .set(0);
+            setUserid(localid);
           } else {
             // console.log("got pushed back to home page")
             router.push("/");
@@ -115,7 +121,7 @@ const Room = (props) => {
       // GET AONTHER USER TO MAKE ADMIN, OTHERWISE DELETE
 
       window.addEventListener("beforeunload", (event) => {
-        roomRef.child("users/" + userid).remove();
+        roomRef.child("users/" + localid).remove();
         roomRef.once("value").then((res) => {
           if (res.hasChild("users")) {
             if (creator == user.nickname) {
@@ -195,6 +201,7 @@ const Room = (props) => {
             list={list}
             roomId={roomid}
             user={user}
+            userid={userid}
             admin={admin}
             database={firebase}
             fetchData={fetchData}

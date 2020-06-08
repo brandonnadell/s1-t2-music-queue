@@ -77,7 +77,11 @@ const Queue = (props) => {
                     <Button
                       variant="danger"
                       onClick={() =>
-                        props.database.removeSong(props.roomId, song)
+                        props.database.removeSong(
+                          props.roomId,
+                          song,
+                          props.userid
+                        )
                       }
                     >
                       Delete

@@ -204,6 +204,7 @@ const Holder = (props) => {
                         <Queue
                           list={props.list}
                           user={props.user}
+                          userid={props.userid}
                           roomId={props.roomId}
                           database={props.database}
                         />
@@ -243,6 +244,7 @@ const Holder = (props) => {
                         <SearchBar
                           roomId={props.roomId}
                           user={props.user}
+                          userid={props.userid}
                           database={props.database}
                           fetchData={props.fetchData}
                           songCache={songCache}
