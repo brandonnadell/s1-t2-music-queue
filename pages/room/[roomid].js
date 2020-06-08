@@ -3,6 +3,7 @@ import AppNavBar from "../../components/AppNavbar";
 import AppFooter from "../../components/AppFooter";
 import SearchBar from "../../components/SearchBar";
 import VideoPlayer from "../../components/VideoPlayer";
+import DisplayRoom from "../../components/DisplayRoom";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -19,6 +20,7 @@ const Room = (props) => {
   const { roomid } = router.query;
   const [list, setList] = useState([]);
   const [admin, setAdmin] = useState("");
+  const [roomnickname, setRoomNickname] = useState("");
   const user = props.user;
   let userid;
   let firebaseRef;
@@ -149,10 +151,20 @@ const Room = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    var roomRef = firebase.database().ref("rooms/" + roomid);
+    roomRef.on("value", (snapshot) => {
+      var nickname = "";
+      nickname = snapshot.child("roomNickname").val();
+
+      setRoomNickname(nickname);
+    });
+  });
+
   return (
     <Layout user={user}>
       <div style={{ display: "flex" }}>
-        <p style={{ marginTop: "15px" }}>Room: {roomid}</p>
+        <p style={{ marginTop: "15px" }}>Room: {roomnickname}</p>
         <CopyToClipboard text={roomid}>
           <Button
             style={{
@@ -162,10 +174,21 @@ const Room = (props) => {
             }}
             variant="outline-dark"
           >
-            Copy
+            Copy Roomid
           </Button>
         </CopyToClipboard>
       </div>
+      <div
+        style={{ maxWidth: "400px", marginTop: "10px", marginBottom: "10px" }}
+      >
+        <DisplayRoom
+          roomId={roomid}
+          database={firebase}
+          user={user}
+          admin={admin}
+        />
+      </div>
+
       <div>
         <div>
           <VideoPlayer
