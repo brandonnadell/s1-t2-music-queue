@@ -10,6 +10,11 @@ const DisplayRoom = (props) => {
   function updateNickname() {
     props.database.changeNickname(tempNickname, props.roomId);
   }
+  function handleKeyPress(key) {
+    if (key === "Enter") {
+      updateNickname();
+    }
+  }
 
   return (
     <div>
@@ -18,6 +23,7 @@ const DisplayRoom = (props) => {
           <FormControl
             placeholder="Enter Nickname..."
             onChange={(e) => setTempNickname(e.target.value)}
+            onKeyPress={(e) => handleKeyPress(e.key)}
           />
           <InputGroup.Append>
             <Button variant="outline-dark" onClick={() => updateNickname()}>
