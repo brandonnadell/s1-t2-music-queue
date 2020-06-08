@@ -63,9 +63,7 @@ const JoinRoom = (props) => {
           onKeyPress={(e) => handleKeyPress(e.key)}
         />
         <InputGroup.Append>
-          <Button variant="outline-dark" onClick={() => join()}>
-            Join Room
-          </Button>
+          <Button onClick={() => join()}>Join Room</Button>
         </InputGroup.Append>
       </InputGroup>
       {error ? (
@@ -76,9 +74,10 @@ const JoinRoom = (props) => {
       {invalidId ? <p>Invalid ID, please try a different one</p> : <p></p>}
       <style jsx>{`
         .joinRoom {
-          position: absolute;
-          top: 700px;
-          left: 550px;
+          position: static;
+          width: 700px;
+          padding-left: 100px;
+          padding-right: 200px;
         }
       `}</style>
     </div>
