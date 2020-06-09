@@ -113,7 +113,6 @@ const Room = (props) => {
       });
 
       // GET AONTHER USER TO MAKE ADMIN, OTHERWISE DELETE
-
       window.addEventListener("beforeunload", (event) => {
         roomRef.child("users/" + userid).remove();
         roomRef.once("value").then((res) => {

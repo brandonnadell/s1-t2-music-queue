@@ -18,9 +18,9 @@ function AppNavbar(props) {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-        <Link href="/" passHref={true}>
+        <a href="/">
           <Navbar.Brand>Shared Music Queue</Navbar.Brand>
-        </Link>
+        </a>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Nav>
