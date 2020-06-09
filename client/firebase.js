@@ -282,7 +282,7 @@ firebase.changeNickname = (roomnickname, roomId) => {
       .database()
       .ref("rooms/" + roomId)
       .child("roomNickname")
-      .set(roomnickname + " (roomid:" + roomId + ")");
+      .set(roomnickname);
   }
 };
 
