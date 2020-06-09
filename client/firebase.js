@@ -271,11 +271,19 @@ firebase.getRooms = () => {
 };
 
 firebase.changeNickname = (roomnickname, roomId) => {
-  firebase
-    .database()
-    .ref("rooms/" + roomId)
-    .child("roomNickname")
-    .set(roomnickname + " (roomid:" + roomId + ")");
+  if (roomnickname == roomId) {
+    firebase
+      .database()
+      .ref("rooms/" + roomId)
+      .child("roomNickname")
+      .set(roomId);
+  } else {
+    firebase
+      .database()
+      .ref("rooms/" + roomId)
+      .child("roomNickname")
+      .set(roomnickname);
+  }
 };
 
 firebase.updateNickname = (roomId) => {
