@@ -8,7 +8,11 @@ const DisplayRoom = (props) => {
   let creator = props.admin;
 
   function updateNickname() {
-    props.database.changeNickname(tempNickname, props.roomId);
+    if (tempNickname.length === 0) {
+      props.database.changeNickname(props.roomId, props.roomId);
+    } else {
+      props.database.changeNickname(tempNickname, props.roomId);
+    }
   }
   function handleKeyPress(key) {
     if (key === "Enter") {
