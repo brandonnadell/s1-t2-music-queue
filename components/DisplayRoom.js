@@ -8,7 +8,7 @@ const DisplayRoom = (props) => {
   let creator = props.admin;
 
   function updateNickname() {
-    if (tempNickname.length === 0) {
+    if (tempNickname.length === 0 || !/\S/.test(tempNickname)) {
       props.database.changeNickname(props.roomId, props.roomId);
     } else {
       props.database.changeNickname(tempNickname, props.roomId);
