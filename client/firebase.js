@@ -130,11 +130,27 @@ firebase.updateProgress = (roomId, key, player) => {
 };
 
 firebase.removePlaying = (roomId, key) => {
-  firebase
+  let username;
+  let songref = firebase
     .database()
-    .ref("rooms/" + roomId + "/songs/")
-    .child(key)
-    .remove();
+    .ref("rooms/" + roomId + "/songs")
+    .child(key);
+  songref.once("value").then((snapshot) => {
+    username = snapshot.val().addedBy;
+    firebase
+      .database()
+      .ref("rooms/" + roomId + "/users")
+      .orderByChild("nickname")
+      .equalTo(username)
+      .once("value")
+      .then((snapshot) => {
+        snapshot.forEach((user) => {
+          console.log(user.val());
+          firebase.decrementUserQueueCount(roomId, user.key);
+        });
+      });
+  });
+  songref.remove();
 };
 
 firebase.removeUpvote = (roomId, song, user) => {
@@ -215,7 +231,7 @@ firebase.changePosition = (song, roomId, change) => {
     });
 };
 
-firebase.removeSong = (roomId, song) => {
+firebase.removeSong = (roomId, song, userid) => {
   let firebaseRef = firebase.database().ref("rooms/" + roomId + "/songs");
   firebaseRef
     .orderByKey()
@@ -252,6 +268,7 @@ firebase.removeSong = (roomId, song) => {
             .set(pos + 1);
         });
     });
+  firebase.decrementUserQueueCount(roomId, userid);
 };
 
 firebase.createRoom = async (user) => {
@@ -295,6 +312,51 @@ firebase.updateNickname = (roomId) => {
     });
   }
   return nickname;
+};
+
+firebase.incrementUserQueueCount = (roomId, userid) => {
+  let user = firebase
+    .database()
+    .ref("rooms/" + roomId + "/users")
+    .child(userid);
+  let numQueued;
+  user.once("value").then((snapshot) => {
+    numQueued = snapshot.val().queued;
+    user.update({
+      queued: numQueued + 1,
+    });
+  });
+};
+
+firebase.decrementUserQueueCount = (roomId, userid) => {
+  let user = firebase
+    .database()
+    .ref("rooms/" + roomId + "/users")
+    .child(userid);
+  let numQueued;
+  user.once("value").then((snapshot) => {
+    numQueued = snapshot.val().queued;
+    user.update({
+      queued: numQueued - 1,
+    });
+    console.log(userid + ", " + numQueued);
+  });
+};
+
+firebase.getUserQueueCount = (roomId, userid) => {
+  let user = firebase
+    .database()
+    .ref("rooms/" + roomId + "/users")
+    .child(userid);
+  let numQueued;
+  return user.once("value");
+};
+
+firebase.getUserCount = (roomId) => {
+  return firebase
+    .database()
+    .ref("rooms/" + roomId + "/users")
+    .once("value");
 };
 
 export default firebase;
