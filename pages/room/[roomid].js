@@ -12,6 +12,7 @@ import { requiredAuth } from "../../utils/ssr";
 import firebase from "../../client/firebase";
 import { fetchData } from "../../utils/youtube_api";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 
 export const getServerSideProps = requiredAuth;
 
@@ -168,45 +169,78 @@ const Room = (props) => {
 
   return (
     <Layout user={user}>
-      <div style={{ display: "flex" }}>
-        <p style={{ marginTop: "15px" }}>Room: {roomnickname}</p>
-        <CopyToClipboard text={roomid}>
-          <Button
+      {admin.length !== 0 ? (
+        <>
+          <div style={{ display: "flex" }}>
+            <p style={{ marginTop: "15px" }}>Room: {roomnickname}</p>
+            <CopyToClipboard text={roomid}>
+              <Button
+                style={{
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  marginLeft: "10px",
+                }}
+                title={
+                  "Share this room's id (" + roomid + ") with your friends"
+                }
+                variant="outline-dark"
+              >
+                Copy Id
+              </Button>
+            </CopyToClipboard>
+          </div>
+          <div
             style={{
+              maxWidth: "400px",
               marginTop: "10px",
               marginBottom: "10px",
-              marginLeft: "10px",
             }}
-            variant="outline-dark"
           >
-            Copy Roomid
-          </Button>
-        </CopyToClipboard>
-      </div>
-      <div
-        style={{ maxWidth: "400px", marginTop: "10px", marginBottom: "10px" }}
-      >
-        <DisplayRoom
-          roomId={roomid}
-          database={firebase}
-          user={user}
-          admin={admin}
-        />
-      </div>
+            <DisplayRoom
+              roomId={roomid}
+              database={firebase}
+              user={user}
+              admin={admin}
+            />
+          </div>
 
-      <div>
-        <div>
-          <VideoPlayer
-            list={list}
-            roomId={roomid}
-            user={user}
-            userid={userid}
-            admin={admin}
-            database={firebase}
-            fetchData={fetchData}
-          />
+          <div>
+            <div>
+              <VideoPlayer
+                list={list}
+                roomId={roomid}
+                user={user}
+                userid={userid}
+                admin={admin}
+                database={firebase}
+                fetchData={fetchData}
+              />
+            </div>
+          </div>
+        </>
+      ) : (
+        <div
+          style={{
+            marginTop: "20%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexFlow: "column nowrap",
+            display: "flex",
+          }}
+        >
+          <div
+            style={{ fontSize: "22px", fontWeight: "bold", marginBottom: 12 }}
+          >
+            LOADING...
+          </div>
+          <div>
+            <Spinner animation="grow" variant="primary" />
+            <Spinner animation="grow" variant="primary" />
+            <Spinner animation="grow" variant="primary" />
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 };
