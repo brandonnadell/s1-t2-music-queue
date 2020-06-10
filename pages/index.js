@@ -6,6 +6,8 @@ import JoinRoom from "../components/JoinRoom";
 import firebase from "../client/firebase";
 import Head from "next/head";
 
+import img from "../public/player.jpg";
+
 export const getServerSideProps = optionalAuth;
 
 function HomePage(props) {
@@ -26,6 +28,9 @@ function HomePage(props) {
               create a room and share the room code with your friends to get
               started!
             </p>
+            <div>
+              <img src="img" />
+            </div>
           </div>
           <div data-cy="create_room" className="createRoom">
             <h1 className="headers">Create Room</h1>
@@ -36,7 +41,7 @@ function HomePage(props) {
             </p>
           </div>
           <div data-cy="join_room" className="joinRoom">
-            <h1>Join Room</h1>
+            <h1 className="headers">Join Room</h1>
             <JoinRoom user={user} database={firebase}></JoinRoom>
             <p className="paraText">
               Did your friends already create a room? Enter the room ID to join!
@@ -97,6 +102,7 @@ function HomePage(props) {
         .headers {
           text-align: center;
           padding: 5pt;
+          font-family: "Georgia", serif;
         }
         .introText {
           text-align: center;
@@ -108,6 +114,9 @@ function HomePage(props) {
           text-align: center;
           padding-top: 10pt;
           font-family: "Georgia", serif;
+          padding-bottom: 10pt;
+          padding-right: 10pt;
+          padding-left: 10pt;
         }
         .howItWorks {
           position: relative;
