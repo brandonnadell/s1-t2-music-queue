@@ -52,7 +52,7 @@ function HomePage(props) {
               allows you to add, upvote, and downvote songs. The ordering of the
               songs in the queue is based on their overall score. Admin-control
               gives the creator the ability to monitor the room by having skip,
-              pause/play authroity as well as banning users.
+              pause/play authority as well as banning users.
             </p>
           </div>
         </div>
