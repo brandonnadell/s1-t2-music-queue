@@ -22,5 +22,6 @@ module.exports = {
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     USE_TEST_AUTH: process.env.USE_TEST_AUTH,
+    TESTING: process.env.TESTING,
   },
 };
