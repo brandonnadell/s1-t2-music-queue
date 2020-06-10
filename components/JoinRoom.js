@@ -53,7 +53,7 @@ const JoinRoom = (props) => {
   }
 
   return (
-    <div>
+    <div className="joinRoom">
       <InputGroup className="mb-3">
         <FormControl
           placeholder="Enter a Room ID"
@@ -63,9 +63,7 @@ const JoinRoom = (props) => {
           onKeyPress={(e) => handleKeyPress(e.key)}
         />
         <InputGroup.Append>
-          <Button variant="outline-dark" onClick={() => join()}>
-            Join Room
-          </Button>
+          <Button onClick={() => join()}>Join Room</Button>
         </InputGroup.Append>
       </InputGroup>
       {error ? (
@@ -74,6 +72,14 @@ const JoinRoom = (props) => {
         <p></p>
       )}
       {invalidId ? <p>Invalid ID, please try a different one</p> : <p></p>}
+      <style jsx>{`
+        .joinRoom {
+          position: static;
+          width: 700px;
+          padding-left: 120px;
+          padding-right: 240px;
+        }
+      `}</style>
     </div>
   );
 };

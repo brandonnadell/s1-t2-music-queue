@@ -7,5 +7,12 @@ export default function CreateRoom(props) {
     Router.push("/room/" + roomId);
   }
 
-  return <Button onClick={() => redirect()}>Create Room</Button>;
+  return (
+    <Button
+      onClick={() => redirect()}
+      style={{ position: "static", left: "50px", top: "150px", color: "white" }}
+    >
+      Create Room
+    </Button>
+  );
 }
