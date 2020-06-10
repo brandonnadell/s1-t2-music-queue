@@ -93,6 +93,8 @@ export function VideoPlayer(props) {
       player
     )
       handleToggle();
+    if (props.user.nickname !== creator && title.length === 0 && started)
+      setStarted(false);
   });
 
   const divStyle = {
