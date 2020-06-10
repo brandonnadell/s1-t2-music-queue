@@ -76,8 +76,8 @@ const JoinRoom = (props) => {
         .joinRoom {
           position: static;
           width: 700px;
-          padding-left: 100px;
-          padding-right: 200px;
+          padding-left: 120px;
+          padding-right: 240px;
         }
       `}</style>
     </div>
