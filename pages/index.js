@@ -45,7 +45,7 @@ function HomePage(props) {
           <div className="howItWorks">
             <h1 className="headers">How It Works</h1>
             <p className="paraText">
-              Our Production is a shared multi-user queue with an admin-control
+              Our production is a shared multi-user queue with an admin-control
               system. Once you create a room, you can share the room ID with
               your friends to start creating your group playlist. The app has
               search functionality to find music through the Youtube API, and
