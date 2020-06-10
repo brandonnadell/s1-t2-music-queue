@@ -61,6 +61,29 @@ const SearchBar = (props) => {
     console.log("ran search term searchbar function.---->", term);
   };
 
+  function queueSong(song) {
+    database.getUserCount(roomId).then((users) => {
+      let userCount = users.numChildren();
+      let maxQueueSize = Math.ceil(20 / userCount);
+      database.getUserQueueCount(roomId, props.userid).then((snapshot) => {
+        if (snapshot.val().queued >= maxQueueSize) {
+          window.alert(
+            "You have reached your queue limit. Wait for songs to get off the queue before queuing more!"
+          );
+        } else {
+          database.createSong(
+            song.videoId,
+            song.title,
+            song.img,
+            roomId,
+            props.user.nickname
+          );
+          database.incrementUserQueueCount(roomId, props.userid);
+        }
+      });
+    });
+  }
+
   function handleKeyPress(key) {
     if (key === "Enter") {
       setSearchCount(searchCount + 1);
@@ -133,15 +156,7 @@ const SearchBar = (props) => {
                       <td style={{ width: "15%" }}>
                         <Button
                           variant="outline-success"
-                          onClick={() =>
-                            database.createSong(
-                              song.videoId,
-                              song.title,
-                              song.img,
-                              roomId,
-                              props.user.nickname
-                            )
-                          }
+                          onClick={() => queueSong(song)}
                         >
                           Queue
                         </Button>

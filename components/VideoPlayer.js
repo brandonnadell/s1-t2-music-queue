@@ -250,6 +250,7 @@ export function VideoPlayer(props) {
             list={props.list}
             database={database}
             user={props.user}
+            userid={props.userid}
             roomId={roomId}
             creator={creator}
             fetchData={props.fetchData}
