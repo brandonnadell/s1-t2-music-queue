@@ -169,7 +169,7 @@ const Room = (props) => {
 
   return (
     <Layout user={user}>
-      {admin.length !== 0 ? (
+      {admin.length !== 0 || props.testing === true ? (
         <>
           <div style={{ display: "flex" }}>
             <p style={{ marginTop: "15px" }}>Room: {roomnickname}</p>

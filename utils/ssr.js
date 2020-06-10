@@ -5,6 +5,7 @@ import config from "./config";
 const getSharedComponentData = (session) => ({
   props: {
     user: session.user,
+    testing: config.TESTING,
   },
 });
 
@@ -12,6 +13,7 @@ export async function getUserSession(req) {
   let session;
   if (config.USE_TEST_AUTH) {
     session = getTestAuthSession(req);
+    config.TESTING = true;
   } else {
     session = await auth0.getSession(req);
   }
