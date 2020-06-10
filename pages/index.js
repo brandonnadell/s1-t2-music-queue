@@ -6,8 +6,6 @@ import JoinRoom from "../components/JoinRoom";
 import firebase from "../client/firebase";
 import Head from "next/head";
 
-import img from "../public/player.jpg";
-
 export const getServerSideProps = optionalAuth;
 
 function HomePage(props) {
@@ -24,18 +22,15 @@ function HomePage(props) {
               Welcome to the Shared Music Queue web app! You no longer have to
               pass a phone around so that everyone can add a song to the queue.
               Trying to create the ultimate study playlist? Want to create a
-              party playlist that you and your friends can dane to? Simply
-              create a room and share the room code with your friends to get
-              started!
+              party playlist that you and your friends can dance to? Look no
+              further! Simply create a room and share the room code with your
+              friends to get started!
             </p>
-            <div>
-              <img src="img" />
-            </div>
           </div>
           <div data-cy="create_room" className="createRoom">
             <h1 className="headers">Create Room</h1>
             <CreateRoom user={user} database={firebase}></CreateRoom>
-            <p className="paraText">
+            <p className="createParaText">
               Create a room for you and your friends to make the ultimate music
               queue.
             </p>
@@ -50,29 +45,33 @@ function HomePage(props) {
           <div className="howItWorks">
             <h1 className="headers">How It Works</h1>
             <p className="paraText">
-              Once you create a room, you can share the room ID with your
-              friends to start creating your group playlist. Thanks to the
-              Youtube API, this service is free to use and gives you access to
-              all the music within the youtube database. The ordering of the
-              queue is based off of a voting system. Each person in the queue
-              can upvote or downvote a song and the overall score decides its
-              placement in the queue.
+              Our Production is a shared multi-user queue with an admin-control
+              system. Once you create a room, you can share the room ID with
+              your friends to start creating your group playlist. The app has
+              search functionality to find music through the Youtube API, and
+              allows you to add, upvote, and downvote songs. The ordering of the
+              songs in the queue is based on their overall score. Admin-control
+              gives the creator the ability to monitor the room by having skip,
+              pause/play authroity as well as banning users.
             </p>
           </div>
         </div>
       ) : (
         <div data-cy="not_logged">
-          Welcome to the Shared Music Queue web app! You no longer have to pass
-          a phone around so that everyone can add a song to the queue. Trying to
-          create the ultimate study playlist? Want to create a party playlist
-          that you and your friends can dane to? Log in to get started!
+          <p className="introText">
+            Welcome to the Shared Music Queue web app! You no longer have to
+            pass a phone around so that everyone can add a song to the queue.
+            Trying to create the ultimate study playlist? Want to create a party
+            playlist that you and your friends can dance to? Log in to get
+            started!
+          </p>
         </div>
       )}
       <style jsx>{`
         .createRoom {
           position: relative;
           text-align: center;
-          top: 250px;
+          top: 100px;
           background-image: linear-gradient(
             185deg,
             rgb(0, 255, 176),
@@ -84,7 +83,7 @@ function HomePage(props) {
         .joinRoom {
           position: relative;
           text-align: center;
-          top: 50px;
+          bottom: 100px;
           left: 556px;
           background-image: linear-gradient(
             185deg,
@@ -107,7 +106,7 @@ function HomePage(props) {
         .introText {
           text-align: center;
           font-family: "Georgia", serif;
-          font-size: large;
+          font-size: 15pt;
           padding-top: 20px;
         }
         .paraText {
@@ -118,9 +117,17 @@ function HomePage(props) {
           padding-right: 10pt;
           padding-left: 10pt;
         }
+        .createParaText {
+          text-align: center;
+          padding-top: 22pt;
+          font-family: "Georgia", serif;
+          padding-bottom: 10pt;
+          padding-right: 10pt;
+          padding-left: 10pt;
+        }
         .howItWorks {
           position: relative;
-          top: 50px;
+          bottom: 99px;
           background-image: linear-gradient(
             185deg,
             rgb(0, 255, 176),
