@@ -94,8 +94,8 @@ const Queue = (props) => {
           ))}
         </div>
       ) : (
-        <center style={{ height: "100%" }}>
-          <Alert style={{ height: "100%", padding: "12%" }} variant="warning">
+        <center style={{ height: "100%", color: "#ffc106" }}>
+          <Alert style={{ height: "100%", padding: "12%" }}>
             <Alert.Heading>
               Songs added to the queue will show up here.
             </Alert.Heading>

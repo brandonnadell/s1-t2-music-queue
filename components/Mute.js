@@ -6,7 +6,7 @@ export function Mute(props) {
   let toggleMute = props.toggleMute;
   return (
     <Button
-      variant={muted ? "primary" : "outline-primary"}
+      variant={muted ? "primary" : "outline-light"}
       onClick={() => toggleMute(!muted)}
     >
       {muted ? <VolumeMuteFill /> : <VolumeUpFill />}

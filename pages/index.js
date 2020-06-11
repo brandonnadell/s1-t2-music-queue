@@ -5,6 +5,8 @@ import CreateRoom from "../components/CreateRoom";
 import JoinRoom from "../components/JoinRoom";
 import firebase from "../client/firebase";
 import Head from "next/head";
+import Jumbotron from "react-bootstrap/Jumbotron";
+// import Background from "../images/musicBg.png";
 
 export const getServerSideProps = optionalAuth;
 
@@ -13,7 +15,7 @@ function HomePage(props) {
   return (
     <Layout data-cy="layout" user={user} database={firebase}>
       {user ? (
-        <div data-cy="room_home">
+        <div data-cy="room_home" style={{}}>
           <div className="intro">
             <Head>
               <title>Shared Music Queue</title>
@@ -27,50 +29,77 @@ function HomePage(props) {
               friends to get started!
             </div>
           </div>
-          <div data-cy="create_room" className="createRoom">
-            <div
-              style={{
-                fontSize: "30px",
-                textAlign: "center",
-                marginBottom: "10px",
-              }}
-            >
-              CREATE ROOM
+          <div
+            style={{ display: "flex", flexFlow: "column", marginTop: "-5%" }}
+          >
+            <div style={{ display: "flex", flex: 1 }}>
+              <div
+                data-cy="create_room"
+                style={{ flex: 1, display: "flex", alignItems: "center" }}
+                className="createRoom"
+              >
+                <div
+                  style={{
+                    fontSize: "30px",
+                    textAlign: "center",
+                    marginBottom: "10px",
+                    fontWeight: "bold",
+                    fontStyle: "oblique",
+                  }}
+                >
+                  Create a Room!
+                </div>
+                <CreateRoom user={user} database={firebase}></CreateRoom>
+                <div className="createParaText">
+                  Create a room for you and your friends to make the ultimate
+                  music queue.
+                </div>
+              </div>
+              <div
+                data-cy="join_room"
+                style={{ flex: 1, display: "flex", alignItems: "center" }}
+                className="joinRoom"
+              >
+                <div
+                  style={{
+                    fontSize: "30px",
+                    textAlign: "center",
+                    marginBottom: "10px",
+                    fontWeight: "bold",
+                    fontStyle: "oblique",
+                  }}
+                >
+                  Join an existing Room!
+                </div>
+                <JoinRoom user={user} database={firebase}></JoinRoom>
+                <div className="paraText">
+                  Did your friends already create a room? Enter the room ID to
+                  join!
+                </div>
+              </div>
             </div>
-            <CreateRoom user={user} database={firebase}></CreateRoom>
-            <div className="createParaText">
-              Create a room for you and your friends to make the ultimate music
-              queue.
-            </div>
-          </div>
-          <div data-cy="join_room" className="joinRoom">
-            <div
-              style={{
-                fontSize: "30px",
-                textAlign: "center",
-                marginBottom: "10px",
-              }}
-            >
-              JOIN ROOM
-            </div>
-            <JoinRoom user={user} database={firebase}></JoinRoom>
-            <div className="paraText">
-              Did your friends already create a room? Enter the room ID to join!
-            </div>
-          </div>
-          <div className="howItWorks">
-            <div style={{ fontSize: "30px", textAlign: "center" }}>
-              HOW IT WORKS
-            </div>
-            <div className="paraText">
-              Our Production is a shared multi-user queue with an admin-control
-              system. Once you create a room, you can share the room ID with
-              your friends to start creating your group playlist. The app has
-              search functionality to find music through the Youtube API, and
-              allows you to add, upvote, and downvote songs. The ordering of the
-              songs in the queue is based on their overall score. Admin-control
-              gives the creator the ability to monitor the room by having skip,
-              pause/play authority as well as banning users.
+            <div className="howItWorks" style={{ flex: 1 }}>
+              <div
+                style={{
+                  fontSize: "30px",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontStyle: "oblique",
+                }}
+              >
+                How it Works!
+              </div>
+              <div className="paraText">
+                Our Production is a shared multi-user queue with an
+                admin-control system. Once you create a room, you can share the
+                room ID with your friends to start creating your group playlist.
+                The app has search functionality to find music through the
+                Youtube API, and allows you to add, upvote, and downvote songs.
+                The ordering of the songs in the queue is based on their overall
+                score. Admin-control gives the creator the ability to monitor
+                the room by having skip, pause/play authority as well as banning
+                users.
+              </div>
             </div>
           </div>
         </div>
@@ -86,30 +115,31 @@ function HomePage(props) {
         </div>
       )}
       <style jsx>{`
+        .createRoom,
+        .joinRoom,
+        .howItWorks {
+          border-radius: 10px;
+          border: 2px whitesmoke solid;
+          background-color: rgba(0, 0, 0, 0.5);
+          color: whitesmoke;
+        }
         .createRoom {
           position: relative;
           text-align: center;
-          top: 100px;
-          background-image: linear-gradient(
-            185deg,
-            rgb(0, 255, 176),
-            rgb(0, 199, 255)
-          );
+          float: left;
+          display: flex;
+          flex-flow: column nowrap;
+          margin-top: 15%;
           width: 50%;
-          height: 200px;
         }
         .joinRoom {
           position: relative;
           text-align: center;
-          bottom: 100px;
-          left: 556px;
-          background-image: linear-gradient(
-            185deg,
-            rgb(0, 255, 176),
-            rgb(0, 199, 255)
-          );
+          display: flex;
+          float: left;
+          flex-flow: column nowrap;
+          margin-top: 15%;
           width: 50%;
-          height: 200px;
         }
         .intro {
           text-align: center;
@@ -120,6 +150,7 @@ function HomePage(props) {
           text-align: center;
           font-size: 15pt;
           padding-top: 20px;
+          color: whitesmoke;
         }
         .paraText {
           text-align: center;
@@ -137,12 +168,6 @@ function HomePage(props) {
         }
         .howItWorks {
           position: relative;
-          bottom: 99px;
-          background-image: linear-gradient(
-            185deg,
-            rgb(0, 255, 176),
-            rgb(0, 199, 255)
-          );
         }
       `}</style>
     </Layout>

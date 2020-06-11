@@ -171,7 +171,7 @@ const Room = (props) => {
     <Layout user={user}>
       {admin.length !== 0 || props.testing === true ? (
         <>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", color: "whitesmoke" }}>
             <p style={{ marginTop: "15px" }}>Room: {roomnickname}</p>
             <CopyToClipboard text={roomid}>
               <Button
@@ -183,7 +183,7 @@ const Room = (props) => {
                 title={
                   "Share this room's id (" + roomid + ") with your friends"
                 }
-                variant="outline-dark"
+                variant="outline-light"
               >
                 Copy Id
               </Button>
@@ -230,14 +230,19 @@ const Room = (props) => {
           }}
         >
           <div
-            style={{ fontSize: "22px", fontWeight: "bold", marginBottom: 12 }}
+            style={{
+              fontSize: "22px",
+              fontWeight: "bold",
+              marginBottom: 12,
+              color: "whitesmoke",
+            }}
           >
             LOADING...
           </div>
           <div>
-            <Spinner animation="grow" variant="primary" />
-            <Spinner animation="grow" variant="primary" />
-            <Spinner animation="grow" variant="primary" />
+            <Spinner animation="grow" variant="light" />
+            <Spinner animation="grow" variant="light" />
+            <Spinner animation="grow" variant="light" />
           </div>
         </div>
       )}

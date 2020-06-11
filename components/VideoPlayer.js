@@ -99,7 +99,6 @@ export function VideoPlayer(props) {
 
   const divStyle = {
     display: "flex",
-    padding: "20px",
   };
 
   function handleToggle() {
@@ -176,26 +175,44 @@ export function VideoPlayer(props) {
     <div>
       <div style={divStyle}>
         <div>
-          <Card style={{ width: "19rem", height: "440px" }}>
-            <Card.Img variant="top" src={img} style={{ height: "275px" }} />
+          <Card
+            className="playerCard"
+            style={{
+              height: "440px",
+              width: "19rem",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              border: "1px whitesmoke solid",
+            }}
+          >
+            <Card.Img
+              variant="top"
+              src={img}
+              className="cardImage"
+              style={{
+                height: "275px",
+                border: "1px whitesmoke solid",
+                borderBottomLeftRadius: "10px",
+                borderBottomRightRadius: "10px",
+              }}
+            />
             {started ? (
               <Card.Body>
                 <div>
                   <div>
-                    <div>
+                    <div style={{ color: "whitesmoke" }}>
                       {playing ? "Playing" : "Paused"}: {title}
                     </div>
                     {props.user.nickname === creator ? (
                       <div>
                         <ButtonGroup aria-label="Song Options">
                           <Button
-                            variant="outline-primary"
+                            variant="outline-light"
                             onClick={handleToggle}
                           >
                             {playing ? <PauseFill /> : <PlayFill />}
                           </Button>
                           <Button
-                            variant="outline-primary"
+                            variant="outline-light"
                             onClick={handleSkipToEnd}
                           >
                             Skip
@@ -209,18 +226,38 @@ export function VideoPlayer(props) {
                       </div>
                     )}
                   </div>
-                  <ProgressBar now={progress} />
+                  <ProgressBar now={progress} variant="primary" />
                 </div>
               </Card.Body>
             ) : (
               <div>
                 {title.length > 0 ? (
-                  <Spinner animation="border" role="status">
-                    <span className="sr-only">Loading...</span>
-                  </Spinner>
+                  <div
+                    style={{
+                      marginTop: "10%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexFlow: "column nowrap",
+                    }}
+                  >
+                    <div style={{ color: "whitesmoke", fontWeight: "bold" }}>
+                      {" "}
+                      LOADING...{" "}
+                    </div>
+                    <Spinner animation="border" role="status" variant="light">
+                      <span className="sr-only">Loading...</span>
+                    </Spinner>
+                  </div>
                 ) : (
-                  <Card.Body style={{ height: "164px", padding: "0px" }}>
-                    <Alert variant="info" style={{ height: "100%" }}>
+                  <Card.Body
+                    style={{
+                      height: "164px",
+                      padding: "0px",
+                      color: "whitesmoke",
+                    }}
+                  >
+                    <Alert style={{ height: "100%" }}>
                       <Alert.Heading>
                         <h5>
                           Songs currently playing in the room will show up here.
@@ -281,6 +318,16 @@ export function VideoPlayer(props) {
           },
         }}
       />
+      <style jsx>{`
+        .cardImage {
+          border: 1px whitemsoke solid;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+        }
+        .playerCard {
+          border: 1px whitemsoke solid;
+        }
+      `}</style>
     </div>
   );
 }

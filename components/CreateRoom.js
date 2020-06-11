@@ -8,10 +8,7 @@ export default function CreateRoom(props) {
   }
 
   return (
-    <Button
-      onClick={() => redirect()}
-      style={{ position: "static", left: "50px", top: "150px", color: "white" }}
-    >
+    <Button onClick={() => redirect()} style={{ color: "white" }}>
       Create Room
     </Button>
   );

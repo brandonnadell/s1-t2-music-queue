@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import firebaseClient from "../client/firebase";
+import "../styles.css";
 
 async function initFirebaseClient(user) {
   const firebaseToken = user.firebaseToken;
