@@ -116,10 +116,6 @@ function HomePage(props) {
           position: relative;
           top: 10px;
         }
-        .headers {
-          text-align: center;
-          padding: 5pt;
-        }
         .introText {
           text-align: center;
           font-size: 15pt;
