@@ -16,7 +16,7 @@ function AppNavbar(props) {
   const user = props.user;
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
         <a href="/">
           <Navbar.Brand>Shared Music Queue</Navbar.Brand>
