@@ -59,13 +59,13 @@ const Ban = (props) => {
           ))}
         </div>
       ) : (
-        <center style={{ height: "100%" }}>
-          <Alert style={{ height: "100%", padding: "12%" }} variant="danger">
+        <center style={{ height: "100%", color: "#da4854" }}>
+          <Alert style={{ height: "100%", padding: "12%" }}>
             <Alert.Heading>
               A list of all other users in the room will show up here.
             </Alert.Heading>
             <div style={{ fontStyle: "italic" }}>
-              There are currently no other users to ban :(
+              There are currently no other users in the room :(
             </div>
           </Alert>
         </center>

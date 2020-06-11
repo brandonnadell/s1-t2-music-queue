@@ -30,7 +30,7 @@ const DisplayRoom = (props) => {
             onKeyPress={(e) => handleKeyPress(e.key)}
           />
           <InputGroup.Append>
-            <Button variant="outline-dark" onClick={() => updateNickname()}>
+            <Button variant="outline-light" onClick={() => updateNickname()}>
               Rename Room
             </Button>
           </InputGroup.Append>

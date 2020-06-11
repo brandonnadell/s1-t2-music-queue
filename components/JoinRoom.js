@@ -72,14 +72,6 @@ const JoinRoom = (props) => {
         <p></p>
       )}
       {invalidId ? <p>Invalid ID, please try a different one</p> : <p></p>}
-      <style jsx>{`
-        .joinRoom {
-          position: static;
-          width: 700px;
-          padding-left: 120px;
-          padding-right: 240px;
-        }
-      `}</style>
     </div>
   );
 };

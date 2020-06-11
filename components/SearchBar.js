@@ -140,7 +140,7 @@ const SearchBar = (props) => {
         </Alert>
       )}
       {songs.length > 0 ? (
-        <Card>
+        <div>
           {/* <Card.Header as="h5">Results</Card.Header> */}
           {loading === true ? (
             <Spinner animation="border" role="status">
@@ -149,39 +149,37 @@ const SearchBar = (props) => {
           ) : (
             <div>
               {/* <Table hover variant="light"> */}
-              <tbody>
-                {songs &&
-                  songs.slice(0, songs.length).map((song, ind) => (
-                    <tr key={song.title}>
-                      <td style={{ width: "15%" }}>
-                        <Button
-                          variant="outline-success"
-                          onClick={() => queueSong(song)}
-                        >
-                          Queue
-                        </Button>
-                      </td>
-                      <td style={{ width: "65%" }}>
-                        <Image
-                          className="img-responsive"
-                          src={song.img}
-                          height="40"
-                          width="40"
-                          rounded
-                        />{" "}
-                        {song.title}
-                      </td>
-                      <td style={{ width: "20%" }}>{song.artist}</td>
-                    </tr>
-                  ))}
-              </tbody>
+              {songs &&
+                songs.slice(0, songs.length).map((song, ind) => (
+                  <tr key={song.title}>
+                    <td style={{ width: "15%" }}>
+                      <Button
+                        variant="outline-success"
+                        onClick={() => queueSong(song)}
+                      >
+                        Queue
+                      </Button>
+                    </td>
+                    <td style={{ width: "65%" }}>
+                      <Image
+                        className="img-responsive"
+                        src={song.img}
+                        height="40"
+                        width="40"
+                        rounded
+                      />{" "}
+                      {song.title}
+                    </td>
+                    <td style={{ width: "20%" }}>{song.artist}</td>
+                  </tr>
+                ))}
               {/* </Table> */}
             </div>
           )}
-        </Card>
+        </div>
       ) : (
-        <center style={{ height: "100%" }}>
-          <Alert style={{ height: "100%", padding: "12%" }} variant="primary">
+        <center style={{ height: "100%", color: "whitesmoke" }}>
+          <Alert style={{ height: "100%", padding: "12%" }}>
             <Alert.Heading>Search results will show up here.</Alert.Heading>
             <div style={{ fontStyle: "italic" }}>
               Search for a song/artist you want to hear in the field above and

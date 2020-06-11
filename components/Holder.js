@@ -68,13 +68,19 @@ const Holder = (props) => {
 
   return (
     <div>
-      <Card style={{ width: "48rem", height: "440px" }}>
+      <Card
+        style={{
+          width: "50rem",
+          height: "440px",
+          backgroundColor: "rgba(0, 0, 0, 0.3)",
+          border: "1px whitesmoke solid",
+        }}
+      >
         <Card.Header
           bg="dark"
           style={{
             display: "flex",
             flexFlow: "row nowrap",
-            backgroundColor: "black",
           }}
         >
           {/* Queue */}
@@ -105,7 +111,7 @@ const Holder = (props) => {
               <InputGroup.Append>
                 <Button
                   data-cy="search"
-                  variant="outline-primary"
+                  variant="outline-light"
                   onClick={() => {
                     // setSearchCount(searchCount + 1)
                     // songCache = []
@@ -144,7 +150,7 @@ const Holder = (props) => {
                   cacheSongsBeforeToggle();
                 }}
               >
-                Ban Users
+                View Users (Ban)
               </Button>
             ) : (
               <Button
@@ -160,7 +166,14 @@ const Holder = (props) => {
             )}
           </div>
         </Card.Header>
-        <Table variant="dark" style={{ marginBottom: "0px", height: "374px" }}>
+        <Table
+          variant="dark"
+          style={{
+            marginBottom: "0px",
+            height: "374px",
+            backgroundColor: "rgba(0, 0, 0, 0)",
+          }}
+        >
           {(() => {
             switch (toggleState) {
               case "queue":
@@ -191,8 +204,12 @@ const Holder = (props) => {
                     </thead>
                     <Table
                       hover
-                      variant="light"
-                      style={{ marginBottom: "0px", height: "323px" }}
+                      variant="dark"
+                      style={{
+                        marginBottom: "0px",
+                        height: "323px",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                      }}
                     >
                       <tbody
                         style={{
@@ -231,8 +248,12 @@ const Holder = (props) => {
                     </thead>
                     <Table
                       hover
-                      variant="light"
-                      style={{ marginBottom: "0px", height: "323px" }}
+                      variant="dark"
+                      style={{
+                        marginBottom: "0px",
+                        height: "323px",
+                        backgroundColor: "rgba(0, 0, 0, 0.55)",
+                      }}
                     >
                       <tbody
                         style={{
@@ -283,8 +304,12 @@ const Holder = (props) => {
                         </thead>
                         <Table
                           hover
-                          variant="light"
-                          style={{ marginBottom: "0px", height: "323px" }}
+                          variant="dark"
+                          style={{
+                            marginBottom: "0px",
+                            height: "323px",
+                            backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          }}
                         >
                           <tbody
                             style={{
@@ -322,8 +347,12 @@ const Holder = (props) => {
                         </thead>
                         <Table
                           hover
-                          variant="light"
-                          style={{ marginBottom: "0px", height: "323px" }}
+                          variant="dark"
+                          style={{
+                            marginBottom: "0px",
+                            height: "323px",
+                            backgroundColor: "rgba(0, 0, 0, 0.5)",
+                          }}
                         >
                           <tbody
                             style={{
