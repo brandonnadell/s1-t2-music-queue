@@ -5,7 +5,7 @@ import config from "./config";
 const getSharedComponentData = (session) => ({
   props: {
     user: session.user,
-    testing: config.TESTING,
+    testing: config.TESTING || false,
   },
 });
 
